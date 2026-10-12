@@ -48,9 +48,9 @@
 
 ## Kurulum
 
-### GitHub Release'ten (önerilen)
+### Hazır paketten
 
-1. [Releases](https://github.com/Kuzuw/autowriter/releases) sayfasından son `autowriter-x.y.z.zip` dosyasını indir ve bir klasöre çıkar.
+1. [Releases](https://github.com/Kuzuw/autowriter/releases) sayfasından son `autowriter-x.y.z.zip` dosyasını indir ve bir klasöre çıkar. (Release yoksa sayfanın üstündeki **Code → Download ZIP** ile repoyu indirmen de olur.)
 2. Chrome'da `chrome://extensions` adresini aç.
 3. Sağ üstten **Geliştirici modu**'nu aç.
 4. **Paketlenmemiş öğe yükle**'ye tıkla ve çıkardığın klasörü seç.
@@ -142,7 +142,7 @@ autowriter/
 └── test/                Motor testleri ve deneme sayfası
 ```
 
-`v1.2.0` gibi bir etiket pushlandığında GitHub Actions paketi oluşturup Release'e ekler. Katkı kuralları için [CONTRIBUTING.md](CONTRIBUTING.md), sürüm geçmişi için [CHANGELOG.md](CHANGELOG.md).
+GitHub'da yeni bir release yayınlandığında (etiket `v` + manifest sürümü, ör. `v1.1.0`) GitHub Actions zip paketini oluşturup release'e ekler. Katkı kuralları için [CONTRIBUTING.md](CONTRIBUTING.md), sürüm geçmişi için [CHANGELOG.md](CHANGELOG.md).
 
 ### Bilinen sınırlar
 

@@ -1,15 +1,16 @@
 name: Release
 
-# v1.2.0 gibi bir etiket pushlandığında zip paketini GitHub Release'e ekler.
+# GitHub'da bir release yayınlandığında (ör. etiket v1.1.0) eklenti zip'ini
+# oluşturup o release'e ekler.
 on:
-  push:
-    tags: ['v*']
+  release:
+    types: [published]
 
 permissions:
   contents: write
 
 jobs:
-  release:
+  package:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,20 +20,19 @@ jobs:
           node-version: 20
 
       - name: Etiket ve manifest sürümü aynı mı
+        env:
+          TAG: ${{ github.event.release.tag_name }}
         run: |
-          TAG="${GITHUB_REF_NAME#v}"
           VERSION=$(node -p "require('./manifest.json').version")
-          if [ "$TAG" != "$VERSION" ]; then
+          if [ "${TAG#v}" != "$VERSION" ]; then
             echo "Etiket ($TAG) manifest sürümüyle ($VERSION) uyuşmuyor"; exit 1
           fi
 
       - run: npm test
       - run: npm run build
 
-      - name: Release oluştur
+      - name: Zip'i release'e ekle
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create "$GITHUB_REF_NAME" dist/*.zip \
-            --title "Autowriter $GITHUB_REF_NAME" \
-            --notes "Kurulum ve değişiklikler için README ve CHANGELOG'a bak."
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" dist/*.zip --clobber
