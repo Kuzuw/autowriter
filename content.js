@@ -160,46 +160,111 @@
 
   // ------------------------------------------------------------ durum balonu
 
-  let overlay = null;
-  let overlayLabel = null;
-  let overlayBtn = null;
+  // Sayfanın CSS'inden etkilenmemesi için Shadow DOM içinde çizilir.
+  const OVERLAY_CSS = `
+    :host { all: initial; }
+    .pill {
+      position: fixed; right: 18px; bottom: 18px; z-index: 2147483647;
+      display: flex; align-items: center; gap: 10px;
+      min-width: 220px; max-width: min(420px, calc(100vw - 36px));
+      padding: 9px 9px 11px 14px; overflow: hidden;
+      background: #1b2340; color: #eef1fa; border-radius: 12px;
+      box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 12px 32px rgba(15,20,40,.35);
+      font: 500 13px/1.35 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      animation: in .18s ease-out;
+    }
+    @keyframes in { from { opacity: 0; transform: translateY(6px); } }
+    .icon { flex: none; width: 14px; display: grid; place-items: center; }
+    .bar-caret { width: 2px; height: 15px; background: #7d93ff; animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .done .bar-caret, .error .bar-caret, .info .bar-caret { display: none; }
+    .tick { display: none; color: #6ee7a8; font-size: 14px; }
+    .done .tick { display: block; }
+    .dot { display: none; width: 8px; height: 8px; border-radius: 50%; background: #ff6b6f; }
+    .error .dot { display: block; }
+    .info .dot { display: block; background: #7d93ff; }
+    .label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pct { color: #9aa4c4; font-variant-numeric: tabular-nums; }
+    button {
+      all: unset; flex: none; display: flex; align-items: center; gap: 6px; cursor: pointer;
+      padding: 4px 8px 4px 6px; border-radius: 8px; color: #eef1fa; font-size: 12px;
+      background: rgba(255,255,255,.08);
+    }
+    button:hover { background: #e5484d; }
+    button:focus-visible { outline: 2px solid #7d93ff; outline-offset: 2px; }
+    kbd {
+      padding: 0 4px; border: 1px solid rgba(255,255,255,.25); border-bottom-width: 2px;
+      border-radius: 4px; font: 600 10px/1.5 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+    .progress { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: rgba(255,255,255,.08); }
+    .progress i { display: block; height: 100%; width: 0; background: #7d93ff; transition: width .2s linear; }
+    .done .progress i { background: #6ee7a8; }
+    @media (prefers-reduced-motion: reduce) { .bar-caret, .pill { animation: none; } }
+  `;
+
+  let host = null;
+  let ui = null;
   let hideTimer = null;
 
   function ensureOverlay() {
-    if (overlay && overlay.isConnected) return;
-    overlay = document.createElement('div');
-    overlay.setAttribute('data-autowriter', '');
-    overlay.style.cssText =
-      'position:fixed;right:16px;bottom:16px;z-index:2147483647;display:flex;gap:10px;align-items:center;' +
-      'background:#111827;color:#fff;font:13px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;' +
-      'padding:8px 12px;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.35);max-width:80vw;';
-    overlayLabel = document.createElement('span');
-    overlayBtn = document.createElement('button');
-    overlayBtn.textContent = 'Durdur';
-    overlayBtn.style.cssText =
-      'all:unset;cursor:pointer;background:#ef4444;color:#fff;padding:3px 10px;border-radius:6px;font-size:12px;';
+    if (host && host.isConnected) return;
+    host = document.createElement('autowriter-status');
+    host.setAttribute('data-autowriter', '');
+    const root = host.attachShadow({ mode: 'closed' });
+    root.innerHTML = `
+      <style>${OVERLAY_CSS}</style>
+      <div class="pill" role="status" aria-live="polite">
+        <span class="icon"><span class="bar-caret"></span><span class="tick">✓</span><span class="dot"></span></span>
+        <span class="label"></span>
+        <span class="pct"></span>
+        <button type="button"><kbd>Esc</kbd><span class="btn-text">Durdur</span></button>
+        <span class="progress"><i></i></span>
+      </div>`;
+    ui = {
+      pill: root.querySelector('.pill'),
+      label: root.querySelector('.label'),
+      pct: root.querySelector('.pct'),
+      btn: root.querySelector('button'),
+      btnText: root.querySelector('.btn-text'),
+      bar: root.querySelector('.progress'),
+      fill: root.querySelector('.progress i'),
+    };
     // Düğmeye basmak hedef alanın odağını çalmasın
-    overlayBtn.addEventListener('mousedown', (e) => e.preventDefault());
-    overlayBtn.addEventListener('click', () => stop());
-    overlay.append(overlayLabel, overlayBtn);
-    document.documentElement.appendChild(overlay);
+    ui.btn.addEventListener('mousedown', (e) => e.preventDefault());
+    ui.btn.addEventListener('click', () => {
+      stop();
+      exitPick();
+    });
+    document.documentElement.appendChild(host);
   }
 
-  function showStatus(text, withStop, autoHideMs) {
+  /**
+   * @param {string} text
+   * @param {{tone?: 'typing'|'done'|'error'|'info', progress?: number, stop?: boolean, hideAfter?: number}} o
+   */
+  function showStatus(text, o) {
+    o = o || {};
     clearTimeout(hideTimer);
     ensureOverlay();
-    overlayLabel.textContent = text;
-    overlayBtn.style.display = withStop ? '' : 'none';
-    if (autoHideMs) hideTimer = setTimeout(hideOverlay, autoHideMs);
+    ui.pill.className = 'pill ' + (o.tone || 'typing');
+    ui.label.textContent = text;
+    const hasProgress = typeof o.progress === 'number';
+    ui.bar.style.display = hasProgress ? '' : 'none';
+    ui.pct.textContent = hasProgress && (o.tone || 'typing') === 'typing' ? `%${Math.round(o.progress * 100)}` : '';
+    if (hasProgress) ui.fill.style.width = `${Math.round(o.progress * 1000) / 10}%`;
+    ui.btn.style.display = o.stop ? '' : 'none';
+    ui.btnText.textContent = o.stopLabel || 'Durdur';
+    if (o.hideAfter) hideTimer = setTimeout(hideOverlay, o.hideAfter);
   }
 
   function hideOverlay() {
     clearTimeout(hideTimer);
-    if (overlay) overlay.remove();
-    overlay = null;
+    if (host) host.remove();
+    host = null;
+    ui = null;
   }
 
-  const toast = (text) => showStatus(text, false, 3000);
+  const toast = (text) => showStatus(text, { tone: 'error', hideAfter: 3200 });
 
   // ------------------------------------------------------------ yazma işlemi
 
@@ -278,8 +343,8 @@
         fire(el, 'keyup', 'Backspace');
       },
       onProgress(i, n) {
-        if (i % 10 === 0 || i === n) {
-          showStatus(`Yazıyor… %${Math.round((i / Math.max(n, 1)) * 100)}  (Esc: durdur)`, true);
+        if (i % 5 === 0 || i === n) {
+          showStatus('Yazıyor', { progress: i / Math.max(n, 1), stop: true });
         }
       },
     };
@@ -288,11 +353,11 @@
   async function run(el, text, settings, opts) {
     if (state.running) return;
     if (!text || !text.trim()) {
-      toast('Yazılacak metin boş. Önce bir şey kopyala.');
+      toast('Pano boş. Önce yazdırmak istediğin metni kopyala.');
       return;
     }
     if (isPassword(el)) {
-      toast('Şifre alanlarına yazılmaz.');
+      toast('Güvenlik için şifre alanlarına yazmıyorum.');
       return;
     }
 
@@ -303,18 +368,19 @@
       if (opts && opts.caretEnd) placeCaretEnd(el);
 
       for (let s = Math.max(0, Math.round(settings.startDelay)); s > 0; s--) {
-        showStatus(`${s} sn sonra yazmaya başlıyor… (Esc: iptal)`, true);
+        showStatus(`${s} saniye sonra yazmaya başlıyor`, { tone: 'info', stop: true, stopLabel: 'İptal' });
         await sleep(1000);
       }
 
-      showStatus('Yazıyor…  (Esc: durdur)', true);
-      await Engine.humanType(text, makeIO(el), { wpm: settings.wpm, typoRate: settings.typoRate });
-      showStatus('Bitti ✓', false, 1800);
+      showStatus('Yazıyor', { progress: 0, stop: true });
+      const stats = await Engine.humanType(text, makeIO(el), { wpm: settings.wpm, typoRate: settings.typoRate });
+      const fixes = stats.typos ? `, ${stats.typos} düzeltme` : '';
+      showStatus(`Bitti: ${stats.chars} karakter${fixes}`, { tone: 'done', progress: 1, hideAfter: 2600 });
     } catch (e) {
-      if (e && e.message === 'aborted') showStatus('Durduruldu', false, 1500);
+      if (e && e.message === 'aborted') showStatus('Yazma durduruldu', { tone: 'info', hideAfter: 1600 });
       else {
         console.error('[Autowriter]', e);
-        showStatus('Hata: ' + (e && e.message ? e.message : e), false, 4000);
+        showStatus('Yazılamadı: ' + (e && e.message ? e.message : e), { tone: 'error', hideAfter: 4000 });
       }
     } finally {
       state.running = false;
@@ -347,12 +413,19 @@
     const box = document.createElement('div');
     box.setAttribute('data-autowriter', '');
     box.style.cssText =
-      'position:fixed;display:none;pointer-events:none;z-index:2147483646;box-sizing:border-box;' +
-      'border:2px solid #6366f1;background:rgba(99,102,241,.12);border-radius:4px;';
+      'all:initial;position:fixed;display:none;pointer-events:none;z-index:2147483646;box-sizing:border-box;' +
+      'border:2px solid #3355ff;background:rgba(51,85,255,.08);border-radius:6px;' +
+      'box-shadow:0 0 0 4px rgba(51,85,255,.15);transition:all .08s ease-out;';
+    const tag = document.createElement('div');
+    tag.textContent = 'Buraya yaz';
+    tag.style.cssText =
+      'all:initial;position:absolute;right:-2px;top:-2px;padding:2px 8px 3px 10px;border-radius:0 6px 0 8px;' +
+      'background:#3355ff;color:#fff;font:600 11.5px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;white-space:nowrap;';
+    box.appendChild(tag);
     document.documentElement.appendChild(box);
     pick.box = box;
 
-    if (window === window.top) showStatus('Yazılacak alanı seç… (Esc: iptal)', false);
+    if (window === window.top) showStatus('Yazılacak alana tıkla', { tone: 'info', stop: true, stopLabel: 'İptal' });
 
     const inOverlay = (e) => {
       const t = e.target;
@@ -383,7 +456,7 @@
       swallow(e);
       const t = closestEditable(e.composedPath()[0]);
       if (!t) {
-        if (window === window.top) showStatus('Bu bir yazı alanı değil. Bir kutuya tıkla (Esc: iptal)', false);
+        if (window === window.top) showStatus('Burası bir yazı alanı değil. Bir metin kutusuna tıkla', { tone: 'error', stop: true, stopLabel: 'İptal' });
         return;
       }
       const txt = pick.text;
@@ -451,7 +524,7 @@
     if (!a || a.tagName === 'IFRAME' || a.tagName === 'FRAME') return; // alt frame ilgilenir
     const el = closestEditable(a);
     if (!el) {
-      if (window === window.top) toast('Önce yazı yazılacak alana tıkla, sonra tekrar dene.');
+      if (window === window.top) toast('Önce yazılacak alana tıkla, sonra kısayola bas.');
       return;
     }
     const settings = await getSettings();

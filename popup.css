@@ -1,56 +1,259 @@
+@font-face {
+  font-family: 'Lora';
+  src: url('fonts/Lora-Variable.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Lora';
+  src: url('fonts/Lora-Italic-Variable.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: italic;
+  font-display: block;
+}
+
+/* Mürekkep + düzeltme kalemi paleti */
 :root {
-  --bg: #0f172a;
-  --panel: #1e293b;
-  --text: #e2e8f0;
-  --muted: #94a3b8;
-  --accent: #6366f1;
-  --danger: #ef4444;
+  color-scheme: light;
+  --paper: #f6f8fc;
+  --surface: #ffffff;
+  --ink: #1b2340;
+  --ink-2: #4a5470;
+  --muted: #7a84a0;
+  --line: #dce2ee;
+  --key-edge: #c7cfe0;
+  --caret: #3355ff;
+  --caret-ink: #ffffff;
+  --caret-soft: #e7ecff;
+  --fix: #e5484d;
+  --ui: system-ui, -apple-system, 'Segoe UI Variable Text', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --serif: 'Lora', Georgia, 'Times New Roman', serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --paper: #0f1428;
+    --surface: #171d36;
+    --ink: #e8ecf8;
+    --ink-2: #b4bcd6;
+    --muted: #8089a8;
+    --line: #29304f;
+    --key-edge: #0a0e1f;
+    --caret: #7d93ff;
+    --caret-ink: #0f1428;
+    --caret-soft: #232c5a;
+    --fix: #ff6b6f;
+  }
 }
 
 * {
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
+html {
+  background: var(--paper);
+}
+
 body {
   margin: 0;
-  width: 340px;
-  padding: 14px;
-  background: var(--bg);
-  color: var(--text);
-  font: 13px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  width: 360px;
+  padding: 14px 16px 12px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 13px/1.45 var(--ui);
+  -webkit-font-smoothing: antialiased;
 }
 
-h1 {
-  margin: 0;
-  font-size: 18px;
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
 }
 
-.sub {
-  margin: 2px 0 12px;
-  color: var(--muted);
+:focus-visible {
+  outline: 2px solid var(--caret);
+  outline-offset: 2px;
 }
 
-section {
-  background: var(--panel);
-  border-radius: 10px;
-  padding: 10px 12px;
-  margin-bottom: 10px;
+/* ------------------------------------------------------------ başlık */
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
-.group-title {
+.mark {
   display: block;
+  border-radius: 7px;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex: 1;
+}
+
+.name {
+  font-family: var(--serif);
+  font-size: 19px;
   font-weight: 600;
-  margin-bottom: 6px;
+  letter-spacing: -0.01em;
 }
 
-.radio {
-  display: block;
-  margin: 4px 0;
+.version {
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.icon-link {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  color: var(--ink-2);
+}
+
+.icon-link:hover {
+  background: var(--caret-soft);
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------- canlı önizleme */
+
+.page {
+  position: relative;
+  margin-bottom: 14px;
+  padding: 14px 16px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.page-text {
+  height: 92px;
+  overflow: hidden;
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  transition: opacity 0.35s ease;
+}
+
+.page-text.fading {
+  opacity: 0;
+}
+
+.page-text .struck {
+  color: var(--fix);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin: 0 0 -0.18em 1px;
+  background: var(--caret);
+  animation: blink 1.05s steps(1) infinite;
+}
+
+.caret.typing {
+  animation: none;
+}
+
+.caret.fixing {
+  background: var(--fix);
+  animation: none;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.page-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.fixes.bump {
+  color: var(--fix);
+}
+
+/* --------------------------------------------------------------- bloklar */
+
+.block {
+  margin-bottom: 14px;
+}
+
+.block-head {
+  margin-bottom: 7px;
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+/* Segment kontrol */
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 3px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.segmented label {
+  position: relative;
   cursor: pointer;
 }
 
-.hint {
-  margin: 0 0 4px 22px;
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented span {
+  display: block;
+  padding: 6px 8px;
+  border-radius: 7px;
+  color: var(--ink-2);
+  text-align: center;
+  font-weight: 500;
+}
+
+.segmented input:checked + span {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.segmented input:focus-visible + span {
+  outline: 2px solid var(--caret);
+  outline-offset: 1px;
+}
+
+.clip {
+  margin: 7px 2px 0;
   color: var(--muted);
   font-size: 12px;
   overflow: hidden;
@@ -58,83 +261,257 @@ section {
   white-space: nowrap;
 }
 
+.clip q {
+  color: var(--ink-2);
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+.clip.empty {
+  color: var(--fix);
+}
+
 textarea {
+  display: block;
   width: 100%;
-  margin-top: 4px;
-  padding: 6px 8px;
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.45;
   resize: vertical;
-  border: 1px solid #334155;
-  border-radius: 6px;
-  background: var(--bg);
-  color: var(--text);
-  font: inherit;
 }
 
-textarea:disabled {
-  opacity: 0.45;
+textarea::placeholder {
+  color: var(--muted);
 }
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 6px;
+textarea:focus {
+  border-color: var(--caret);
+  outline: none;
 }
 
-input[type='range'] {
+/* Klavye tuşu görünümlü hazır ayarlar */
+.keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.key {
+  padding: 7px 0 6px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-bottom: 3px solid var(--key-edge);
+  border-radius: 8px;
+  color: var(--ink-2);
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.06s ease, border-bottom-width 0.06s ease;
+}
+
+.key:hover {
+  color: var(--ink);
+}
+
+.key:active {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+}
+
+.key[aria-checked='true'] {
+  background: var(--caret-soft);
+  border-color: var(--caret);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* İnce ayar */
+.tune {
+  margin-top: 10px;
+}
+
+.tune summary {
+  width: max-content;
+  color: var(--ink-2);
+  font-size: 12px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.tune summary::-webkit-details-marker {
+  display: none;
+}
+
+.tune summary::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 7px 2px 1px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.tune[open] summary::before {
+  transform: rotate(45deg);
+}
+
+.slider {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  margin-top: 8px;
+}
+
+.slider label {
+  color: var(--ink-2);
+}
+
+.slider output {
+  color: var(--ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.slider input {
+  grid-column: 1 / -1;
   width: 100%;
-  accent-color: var(--accent);
+  margin: 4px 0 0;
+  accent-color: var(--caret);
 }
 
-.buttons {
+/* ---------------------------------------------------------- eylemler */
+
+.actions {
   display: flex;
   gap: 8px;
 }
 
-button {
+.cta {
   flex: 1;
-  padding: 9px 10px;
+  padding: 10px 12px 9px;
+  background: var(--caret);
   border: 0;
-  border-radius: 8px;
-  color: #fff;
-  font: inherit;
-  font-weight: 600;
+  border-bottom: 3px solid color-mix(in srgb, var(--caret) 60%, #000);
+  border-radius: 10px;
+  color: var(--caret-ink);
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: transform 0.06s ease, border-bottom-width 0.06s ease, filter 0.15s ease;
+}
+
+.cta:hover {
+  filter: brightness(1.07);
+}
+
+.cta:active {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+}
+
+.ghost {
+  padding: 0 14px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink-2);
+  font-weight: 500;
   cursor: pointer;
 }
 
-button.primary {
-  flex: 2;
-  background: var(--accent);
-}
-
-button.danger {
-  background: var(--danger);
-}
-
-button:hover {
-  filter: brightness(1.1);
+.ghost:hover {
+  border-color: var(--fix);
+  color: var(--fix);
 }
 
 .msg {
-  min-height: 18px;
-  margin-top: 8px;
-  color: #fbbf24;
+  min-height: 17px;
+  margin: 7px 2px 4px;
+  color: var(--fix);
   font-size: 12px;
 }
 
-footer {
-  margin-top: 8px;
+.msg.ok {
+  color: var(--caret);
+}
+
+/* ---------------------------------------------------------- kısayollar */
+
+.shortcuts {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.shortcuts div {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  align-items: center;
+}
+
+.shortcuts div + div {
+  margin-top: 6px;
+}
+
+.shortcuts dt {
+  display: flex;
+  gap: 3px;
+}
+
+.shortcuts dd {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+
+kbd {
+  padding: 1px 5px 0;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  color: var(--ink);
+  font: 600 11px/1.5 var(--ui);
+}
+
+/* ------------------------------------------------------------- kredi */
+
+.credit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   color: var(--muted);
   font-size: 11.5px;
 }
 
-footer div {
-  margin-top: 2px;
+.vibe {
+  padding: 2px 8px;
+  border: 1px dashed var(--muted);
+  border-radius: 999px;
+  color: var(--ink-2);
+  font-family: var(--serif);
+  font-style: italic;
+  text-decoration: none;
 }
 
-kbd {
-  padding: 0 4px;
-  border: 1px solid #475569;
-  border-radius: 4px;
-  background: var(--panel);
-  font-size: 11px;
+.vibe:hover {
+  border-color: var(--caret);
+  color: var(--caret);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+  .page-text {
+    transition: none;
+  }
 }

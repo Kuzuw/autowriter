@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Söz dizimi kontrolü
+        run: for f in engine.js content.js background.js popup.js scripts/check-manifest.js; do node --check "$f"; done
+
+      - name: Testler
+        run: npm test
+
+      - name: Paketle
+        run: npm run build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: autowriter-extension
+          path: dist/*.zip

@@ -1,0 +1,38 @@
+name: Release
+
+# v1.2.0 gibi bir etiket pushlandığında zip paketini GitHub Release'e ekler.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Etiket ve manifest sürümü aynı mı
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          VERSION=$(node -p "require('./manifest.json').version")
+          if [ "$TAG" != "$VERSION" ]; then
+            echo "Etiket ($TAG) manifest sürümüyle ($VERSION) uyuşmuyor"; exit 1
+          fi
+
+      - run: npm test
+      - run: npm run build
+
+      - name: Release oluştur
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/*.zip \
+            --title "Autowriter $GITHUB_REF_NAME" \
+            --notes "Kurulum ve değişiklikler için README ve CHANGELOG'a bak."

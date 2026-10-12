@@ -1,0 +1,43 @@
+name: Hata bildirimi
+description: Bir şey beklediğin gibi çalışmıyor
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: Ne oldu?
+      description: Ne bekliyordun, ne oldu?
+    validations:
+      required: true
+  - type: input
+    id: site
+    attributes:
+      label: Hangi sitede?
+      placeholder: ör. docs.google.com, web.whatsapp.com
+    validations:
+      required: true
+  - type: dropdown
+    id: start
+    attributes:
+      label: Nasıl başlattın?
+      options:
+        - Popup (Alan seç ve yaz)
+        - Alt+Shift+W kısayolu
+        - Sağ tık menüsü
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Tarayıcı ve sürüm
+      placeholder: ör. Chrome 141, Edge 141, Brave 1.83
+  - type: input
+    id: version
+    attributes:
+      label: Autowriter sürümü
+      placeholder: Popup'ın üst kısmında yazar, ör. v1.1.0
+  - type: textarea
+    id: extra
+    attributes:
+      label: Ek bilgi
+      description: Ekran görüntüsü ya da konsol hatası (F12 → Console) varsa ekle.

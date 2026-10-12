@@ -1,0 +1,17 @@
+name: Öneri
+description: Yeni bir özellik ya da iyileştirme öner
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Neyi çözmek istiyorsun?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Önerin
+      description: Nasıl çalışmasını hayal ediyorsun?
+    validations:
+      required: true
