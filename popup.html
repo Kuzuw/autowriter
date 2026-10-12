@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Autowriter</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>✍️ Autowriter</h1>
+      <p class="sub">Metni seçtiğin alana insan gibi yazar.</p>
+    </header>
+
+    <section>
+      <label class="group-title">Metin kaynağı</label>
+      <label class="radio"><input type="radio" name="source" value="clipboard" /> Panodaki (kopyaladığım) metin</label>
+      <div id="clipInfo" class="hint"></div>
+      <label class="radio"><input type="radio" name="source" value="custom" /> Aşağıya yazdığım metin</label>
+      <textarea id="customText" rows="4" placeholder="Yazılacak metni buraya yapıştır…"></textarea>
+    </section>
+
+    <section>
+      <div class="row">
+        <label for="wpm">Hız</label>
+        <span><b id="wpmVal">55</b> kelime/dk</span>
+      </div>
+      <input id="wpm" type="range" min="10" max="200" step="5" />
+
+      <div class="row">
+        <label for="typoRate">Hata oranı</label>
+        <span><b id="typoVal">4</b>%</span>
+      </div>
+      <input id="typoRate" type="range" min="0" max="15" step="1" />
+
+      <div class="row">
+        <label for="startDelay">Başlamadan önce bekle</label>
+        <span><b id="delayVal">2</b> sn</span>
+      </div>
+      <input id="startDelay" type="range" min="0" max="10" step="1" />
+    </section>
+
+    <div class="buttons">
+      <button id="start" class="primary">Alan seç ve yaz</button>
+      <button id="stop" class="danger">Durdur</button>
+    </div>
+    <div id="msg" class="msg"></div>
+
+    <footer>
+      <div><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>W</kbd>: odaktaki alana yaz (çalışırken tekrar basınca durdurur)</div>
+      <div>Sağ tık → <i>Autowriter: metni buraya yaz</i></div>
+      <div><kbd>Esc</kbd>: durdur / iptal</div>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
