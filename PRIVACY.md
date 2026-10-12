@@ -1,20 +1,20 @@
-# Gizlilik
+# Privacy
 
-Autowriter hiçbir veri toplamaz, saklamaz ya da bir sunucuya göndermez.
+Autowriter does not collect, store or send any data.
 
-- **Pano:** Panodaki metin yalnızca sen yazmayı başlattığında okunur ve sadece seçtiğin alana yazılır.
-- **Ayarlar:** Hız, hata oranı, bekleme süresi ve "Kendi metnim" alanı tarayıcının yerel depolamasında (`chrome.storage.local`) tutulur. Bilgisayarından dışarı çıkmaz.
-- **Ağ:** Eklenti hiçbir ağ isteği yapmaz. Analitik, takip ya da reklam yoktur.
-- **Şifre alanları:** Güvenlik için şifre alanlarına yazmaz.
+- **Clipboard:** read only when you start typing, and only typed into the field you choose.
+- **Settings:** speed, typo rate, delay, keyboard layout and your own text are kept in the browser's local storage (`chrome.storage.local`). They never leave your computer.
+- **Network:** the extension makes no network requests. No analytics, tracking or ads.
+- **Password fields:** skipped, always.
 
-## İzinler ve nedenleri
+## Permissions and why they're needed
 
-| İzin | Neden |
+| Permission | Why |
 | --- | --- |
-| `activeTab`, `scripting` | Popup'tan başlattığında, eklenti kurulmadan önce açılmış sekmeye betiği ekleyebilmek için |
-| `storage` | Ayarlarını hatırlamak için |
-| `contextMenus` | Sağ tık menüsündeki "Autowriter: metni buraya yaz" seçeneği için |
-| `clipboardRead` | Kopyaladığın metni okuyabilmek için |
-| `<all_urls>` içerik betiği | Her sitedeki yazı alanlarında çalışabilmek için |
+| `activeTab`, `scripting` | To add the script to a tab that was open before the extension was installed, when you start from the popup |
+| `storage` | To remember your settings |
+| `contextMenus` | For the "Autowriter: type here" right-click item |
+| `clipboardRead` | To read the text you copied |
+| Content script on `<all_urls>` | To work in text fields on any site |
 
-Sorun ya da soruların için: [GitHub Issues](https://github.com/Kuzuw/autowriter/issues)
+Questions or problems: [GitHub Issues](https://github.com/Kuzuw/autowriter/issues)

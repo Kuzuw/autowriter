@@ -5,19 +5,19 @@ const MENU_ID = 'autowriter-type';
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: MENU_ID,
-    title: 'Autowriter: metni buraya yaz',
+    title: chrome.i18n.getMessage('menuTypeHere'),
     contexts: ['editable'],
   });
 });
 
-// Sağ tık menüsü -> tıklanan alana yaz
+// Right-click menu -> type into the clicked field
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId !== MENU_ID || !tab || tab.id == null) return;
   const opts = info.frameId != null ? { frameId: info.frameId } : undefined;
   chrome.tabs.sendMessage(tab.id, { type: 'start-context' }, opts).catch(() => {});
 });
 
-// Kısayol -> odaktaki alana yaz
+// Keyboard shortcut -> type into the focused field
 chrome.commands.onCommand.addListener(async (command) => {
   if (command !== 'start-typing') return;
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -25,7 +25,7 @@ chrome.commands.onCommand.addListener(async (command) => {
   chrome.tabs.sendMessage(tab.id, { type: 'start-focused' }).catch(() => {});
 });
 
-// Bir frame'de alan seçildiyse diğer frame'lerdeki seçim modunu kapat
+// A field was picked in one frame: end pick mode in the other frames
 chrome.runtime.onMessage.addListener((msg, sender) => {
   if (msg && msg.type === 'pick-done' && sender.tab) {
     chrome.tabs.sendMessage(sender.tab.id, { type: 'exit-pick' }).catch(() => {});

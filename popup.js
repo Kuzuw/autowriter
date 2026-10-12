@@ -1,6 +1,17 @@
 'use strict';
 
-const DEFAULTS = { wpm: 55, typoRate: 4, startDelay: 2, source: 'clipboard', customText: '', preset: 'natural' };
+const t = (key, ...subs) => chrome.i18n.getMessage(key, subs.map(String)) || key;
+const UI_LANG = (chrome.i18n.getUILanguage() || 'en').toLowerCase();
+
+const DEFAULTS = {
+  wpm: 55,
+  typoRate: 4,
+  startDelay: 2,
+  source: 'clipboard',
+  customText: '',
+  preset: 'natural',
+  layout: null,
+};
 
 const PRESETS = {
   calm: { wpm: 35, typoRate: 2 },
@@ -9,14 +20,24 @@ const PRESETS = {
   pro: { wpm: 125, typoRate: 2 },
 };
 
-const SAMPLE = 'Merhaba! Bu satırları ben yazmıyorum, Autowriter yazıyor. Arada bir tuşu kaçırıyor, fark edip düzeltiyor.';
-
 const $ = (id) => document.getElementById(id);
 const sourceValue = () => document.querySelector('input[name="source"]:checked').value;
 
 let clipboardText = '';
 
-// ------------------------------------------------------------------ mesaj
+// ------------------------------------------------------------------ i18n
+
+function localize() {
+  document.documentElement.lang = UI_LANG.split('-')[0];
+  document.querySelectorAll('[data-i18n]').forEach((el) => (el.textContent = t(el.dataset.i18n)));
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => (el.placeholder = t(el.dataset.i18nPlaceholder)));
+  document.querySelectorAll('[data-i18n-title]').forEach((el) => (el.title = t(el.dataset.i18nTitle)));
+  document
+    .querySelectorAll('[data-i18n-aria-label]')
+    .forEach((el) => el.setAttribute('aria-label', t(el.dataset.i18nAriaLabel)));
+}
+
+// ---------------------------------------------------------------- messages
 
 function setMsg(text, ok) {
   const el = $('msg');
@@ -24,18 +45,9 @@ function setMsg(text, ok) {
   el.classList.toggle('ok', !!ok);
 }
 
-// --------------------------------------------------------------- ayarlar
+const fixesLabel = (n) => (n === 1 ? t('fixesOne') : t('fixesMany', n));
 
-function collect() {
-  return {
-    wpm: Number($('wpm').value),
-    typoRate: Number($('typoRate').value),
-    startDelay: Number($('startDelay').value),
-    source: sourceValue(),
-    customText: $('customText').value,
-    preset: currentPreset(),
-  };
-}
+// ---------------------------------------------------------------- settings
 
 function currentPreset() {
   const wpm = Number($('wpm').value);
@@ -46,16 +58,29 @@ function currentPreset() {
   return 'custom';
 }
 
+function collect() {
+  return {
+    wpm: Number($('wpm').value),
+    typoRate: Number($('typoRate').value),
+    startDelay: Number($('startDelay').value),
+    source: sourceValue(),
+    customText: $('customText').value,
+    preset: currentPreset(),
+    layout: $('layout').value,
+  };
+}
+
 function render() {
-  $('wpmVal').textContent = `${$('wpm').value} kelime/dk`;
-  $('typoVal').textContent = `%${$('typoRate').value}`;
-  $('delayVal').textContent = Number($('startDelay').value) === 0 ? 'hemen' : `${$('startDelay').value} sn`;
-  $('metaSpeed').textContent = `${$('wpm').value} kelime/dk, %${$('typoRate').value} hata`;
+  const wpm = $('wpm').value;
+  const typo = $('typoRate').value;
+  const delay = Number($('startDelay').value);
+  $('wpmVal').textContent = t('wpmValue', wpm);
+  $('typoVal').textContent = t('percentValue', typo);
+  $('delayVal').textContent = delay === 0 ? t('delayNow') : t('delaySeconds', delay);
+  $('metaSpeed').textContent = t('metaSpeed', wpm, typo);
 
   const preset = currentPreset();
-  document.querySelectorAll('.key').forEach((k) => {
-    k.setAttribute('aria-checked', String(k.dataset.preset === preset));
-  });
+  document.querySelectorAll('.key').forEach((k) => k.setAttribute('aria-checked', String(k.dataset.preset === preset)));
 
   const custom = sourceValue() === 'custom';
   $('customText').hidden = !custom;
@@ -68,7 +93,7 @@ function save() {
   saveTimer = setTimeout(() => chrome.storage.local.set(collect()), 150);
 }
 
-// ----------------------------------------------------------------- pano
+// --------------------------------------------------------------- clipboard
 
 async function refreshClipboard() {
   const info = $('clipInfo');
@@ -80,16 +105,16 @@ async function refreshClipboard() {
   info.classList.toggle('empty', !clipboardText.trim());
   info.textContent = '';
   if (!clipboardText.trim()) {
-    info.textContent = 'Pano boş. Önce yazdırmak istediğin metni kopyala.';
+    info.textContent = t('clipEmpty');
     return;
   }
   const flat = clipboardText.replace(/\s+/g, ' ').trim();
   const q = document.createElement('q');
   q.textContent = flat.length > 34 ? flat.slice(0, 34) + '…' : flat;
-  info.append(`${clipboardText.length} karakter: `, q);
+  info.append(t('clipChars', clipboardText.length), q);
 }
 
-// -------------------------------------------------------- canlı önizleme
+// ------------------------------------------------------------ live preview
 
 const preview = (() => {
   const box = $('preview');
@@ -102,16 +127,16 @@ const preview = (() => {
 
   function sampleText() {
     const own = sourceValue() === 'custom' ? $('customText').value : clipboardText;
-    const t = (own || '').replace(/\s+/g, ' ').trim();
-    if (t.length < 12) return SAMPLE;
-    return t.length > 120 ? t.slice(0, 120).replace(/\s+\S*$/, '') + '…' : t;
+    const text = (own || '').replace(/\s+/g, ' ').trim();
+    if (text.length < 12) return t('previewSample');
+    return text.length > 120 ? text.slice(0, 120).replace(/\s+\S*$/, '') + '…' : text;
   }
 
   function reset() {
     box.textContent = '';
     live = [];
     fixes = 0;
-    $('metaFixes').textContent = '0 düzeltme';
+    $('metaFixes').textContent = fixesLabel(0);
     caret = document.createElement('span');
     caret.className = 'caret';
     box.append(caret);
@@ -164,7 +189,7 @@ const preview = (() => {
                 erasing = true;
                 fixes++;
                 const m = $('metaFixes');
-                m.textContent = `${fixes} düzeltme`;
+                m.textContent = fixesLabel(fixes);
                 m.classList.add('bump');
                 setTimeout(() => m.classList.remove('bump'), 600);
               }
@@ -173,7 +198,7 @@ const preview = (() => {
               setTimeout(() => span.remove(), 140);
             },
           },
-          { wpm: s.wpm, typoRate: s.typoRate }
+          { wpm: s.wpm, typoRate: s.typoRate, layout: s.layout }
         );
         await wait(2200, my);
         box.classList.add('fading');
@@ -198,13 +223,13 @@ const preview = (() => {
   return { restart };
 })();
 
-// ------------------------------------------------------------- başlatma
+// ------------------------------------------------------------------- start
 
 async function sendToTab(tabId, message) {
   try {
     await chrome.tabs.sendMessage(tabId, message);
   } catch (e) {
-    // Eklenti kurulmadan önce açılmış sekme: içerik betiğini elle ekle
+    // Tab opened before the extension was installed: inject the content script
     await chrome.scripting.executeScript({
       target: { tabId, allFrames: true },
       files: ['engine.js', 'content.js'],
@@ -224,48 +249,48 @@ $('start').addEventListener('click', async () => {
     text = clipboardText;
   }
   if (!text || !text.trim()) {
-    setMsg(
-      settings.source === 'clipboard'
-        ? 'Pano boş. Önce yazdırmak istediğin metni kopyala.'
-        : 'Yazılacak metin boş. Kutucuğa bir metin yapıştır.'
-    );
+    setMsg(settings.source === 'clipboard' ? t('clipEmpty') : t('errCustomEmpty'));
     return;
   }
 
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab || tab.id == null) {
-    setMsg('Açık bir sekme bulunamadı.');
+    setMsg(t('errNoTab'));
     return;
   }
   try {
     await sendToTab(tab.id, { type: 'start-pick', text, settings });
     window.close();
   } catch (e) {
-    setMsg('Tarayıcı bu sayfada eklentilere izin vermiyor. Normal bir web sayfasında dene.');
+    setMsg(t('errRestricted'));
   }
 });
 
 $('stop').addEventListener('click', async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (tab && tab.id != null) chrome.tabs.sendMessage(tab.id, { type: 'stop' }).catch(() => {});
-  setMsg('Yazma durduruldu.', true);
+  setMsg(t('stoppedMsg'), true);
 });
 
-// ------------------------------------------------------------------ ilk yük
+// -------------------------------------------------------------------- init
 
 async function init() {
-  try {
-    $('version').textContent = 'v' + chrome.runtime.getManifest().version;
-  } catch (e) {
-    /* önizleme sayfasında manifest yok */
-  }
+  localize();
+  $('version').textContent = 'v' + chrome.runtime.getManifest().version;
 
   const s = await chrome.storage.local.get(DEFAULTS);
+  if (!s.layout) {
+    s.layout = AutowriterEngine.layoutForLanguage(UI_LANG);
+    chrome.storage.local.set({ layout: s.layout });
+  }
   $('wpm').value = s.wpm;
   $('typoRate').value = s.typoRate;
   $('startDelay').value = s.startDelay;
   $('customText').value = s.customText;
-  const radio = document.querySelector(`input[name="source"][value="${s.source}"]`) || document.querySelector('input[name="source"]');
+  $('layout').value = s.layout;
+  if (!$('layout').value) $('layout').value = 'en';
+  const radio =
+    document.querySelector(`input[name="source"][value="${s.source}"]`) || document.querySelector('input[name="source"]');
   radio.checked = true;
   if (currentPreset() === 'custom') $('tune').open = true;
   render();
@@ -291,6 +316,11 @@ async function init() {
       if (el.id !== 'startDelay') preview.restart();
     })
   );
+
+  $('layout').addEventListener('change', () => {
+    save();
+    preview.restart();
+  });
 
   document.querySelectorAll('input[name="source"]').forEach((el) =>
     el.addEventListener('change', () => {

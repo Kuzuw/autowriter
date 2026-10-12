@@ -1,7 +1,7 @@
-"""İkonları (icons/*.png) ve README banner'ını (docs/banner.png) yeniden üretir.
+"""Regenerates the icons (icons/*.png) and the README banner (docs/banner.png).
 
-Gerekenler: pip install playwright pillow && playwright install chromium
-Kullanım:  python3 design/render_icons.py
+Requires: pip install playwright pillow && playwright install chromium
+Usage:     python3 design/render_icons.py
 """
 import pathlib
 import tempfile
@@ -20,7 +20,7 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
     page.wait_for_timeout(300)
     icon = page.locator("#i")
     icon.screenshot(path=str(DESIGN / "icon-512.png"), omit_background=True)
-    # Küçük boyutlar için sadeleştirilmiş çizim (dalgalı çizgi yok, harf daha büyük)
+    # Simplified drawing for tiny sizes (no squiggle, bigger letter)
     page.evaluate("document.getElementById('i').classList.add('small')")
     small_path = pathlib.Path(tmp) / "icon-small.png"
     icon.screenshot(path=str(small_path), omit_background=True)
@@ -38,4 +38,4 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
 
     browser.close()
 
-print("icons/ ve docs/banner.png güncellendi")
+print("Updated icons/ and docs/banner.png")

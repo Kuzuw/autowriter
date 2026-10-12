@@ -1,0 +1,185 @@
+{
+  "extName": {
+    "message": "Autowriter"
+  },
+  "extDescription": {
+    "message": "Types your copied text into any field like a real person: uneven rhythm, realistic typos and corrections."
+  },
+  "cmdStart": {
+    "message": "Type the copied text into the focused field (press again to stop)"
+  },
+  "menuTypeHere": {
+    "message": "Autowriter: type here"
+  },
+  "githubTitle": {
+    "message": "Open on GitHub"
+  },
+  "previewLabel": {
+    "message": "Live preview"
+  },
+  "previewSample": {
+    "message": "Hi! I'm not the one typing these lines, Autowriter is. Now and then it misses a key, notices, and fixes it."
+  },
+  "metaSpeed": {
+    "message": "$1 wpm, $2% typos"
+  },
+  "fixesOne": {
+    "message": "1 fix"
+  },
+  "fixesMany": {
+    "message": "$1 fixes"
+  },
+  "sourceLabel": {
+    "message": "Text source"
+  },
+  "sourceClipboard": {
+    "message": "Copied text"
+  },
+  "sourceCustom": {
+    "message": "My own text"
+  },
+  "clipReading": {
+    "message": "Reading the clipboard…"
+  },
+  "clipEmpty": {
+    "message": "The clipboard is empty. Copy the text you want typed first."
+  },
+  "clipChars": {
+    "message": "$1 characters: "
+  },
+  "customPlaceholder": {
+    "message": "Paste the text to type here"
+  },
+  "styleHead": {
+    "message": "Typing style"
+  },
+  "presetCalm": {
+    "message": "Calm"
+  },
+  "presetNatural": {
+    "message": "Natural"
+  },
+  "presetFast": {
+    "message": "Fast"
+  },
+  "presetPro": {
+    "message": "Pro"
+  },
+  "layoutLabel": {
+    "message": "Keyboard"
+  },
+  "layout_en": {
+    "message": "English (QWERTY)"
+  },
+  "layout_tr_q": {
+    "message": "Turkish Q"
+  },
+  "layout_tr_f": {
+    "message": "Turkish F"
+  },
+  "layout_de": {
+    "message": "German (QWERTZ)"
+  },
+  "layout_fr": {
+    "message": "French (AZERTY)"
+  },
+  "layout_es": {
+    "message": "Spanish (QWERTY)"
+  },
+  "layout_dvorak": {
+    "message": "Dvorak"
+  },
+  "tune": {
+    "message": "Fine-tune"
+  },
+  "speed": {
+    "message": "Speed"
+  },
+  "typoRate": {
+    "message": "Typo rate"
+  },
+  "startDelay": {
+    "message": "Delay before typing"
+  },
+  "wpmValue": {
+    "message": "$1 wpm"
+  },
+  "percentValue": {
+    "message": "$1%"
+  },
+  "delayNow": {
+    "message": "none"
+  },
+  "delaySeconds": {
+    "message": "$1 s"
+  },
+  "startBtn": {
+    "message": "Pick a field and type"
+  },
+  "stopBtn": {
+    "message": "Stop"
+  },
+  "errCustomEmpty": {
+    "message": "Your text is empty. Paste something into the box."
+  },
+  "errNoTab": {
+    "message": "No open tab found."
+  },
+  "errRestricted": {
+    "message": "The browser doesn't allow extensions on this page. Try a regular web page."
+  },
+  "stoppedMsg": {
+    "message": "Typing stopped."
+  },
+  "scFocused": {
+    "message": "Type into the focused field"
+  },
+  "scStop": {
+    "message": "Stop"
+  },
+  "scRightClick": {
+    "message": "Right-click"
+  },
+  "statusTyping": {
+    "message": "Typing"
+  },
+  "statusCountdown": {
+    "message": "Starting in $1 s"
+  },
+  "statusDone": {
+    "message": "Done: $1 characters"
+  },
+  "statusDoneFixes": {
+    "message": "Done: $1 characters, $2 fixes"
+  },
+  "statusStopped": {
+    "message": "Typing stopped"
+  },
+  "statusFailed": {
+    "message": "Couldn't type: $1"
+  },
+  "pickPrompt": {
+    "message": "Click the field to type into"
+  },
+  "pickNotField": {
+    "message": "That's not a text field. Click a text box"
+  },
+  "pickTag": {
+    "message": "Type here"
+  },
+  "btnStop": {
+    "message": "Stop"
+  },
+  "btnCancel": {
+    "message": "Cancel"
+  },
+  "toastPassword": {
+    "message": "Password fields are skipped for safety."
+  },
+  "toastFocusFirst": {
+    "message": "Click into a text field first, then press the shortcut."
+  },
+  "toastNoField": {
+    "message": "No editable field found."
+  }
+}

@@ -1,43 +1,48 @@
-name: Hata bildirimi
-description: Bir şey beklediğin gibi çalışmıyor
+name: Bug report
+description: Something doesn't work the way you expected
 labels: [bug]
 body:
   - type: textarea
     id: what
     attributes:
-      label: Ne oldu?
-      description: Ne bekliyordun, ne oldu?
+      label: What happened?
+      description: What did you expect, and what happened instead?
     validations:
       required: true
   - type: input
     id: site
     attributes:
-      label: Hangi sitede?
-      placeholder: ör. docs.google.com, web.whatsapp.com
+      label: Which site?
+      placeholder: e.g. docs.google.com, web.whatsapp.com
     validations:
       required: true
   - type: dropdown
     id: start
     attributes:
-      label: Nasıl başlattın?
+      label: How did you start it?
       options:
-        - Popup (Alan seç ve yaz)
-        - Alt+Shift+W kısayolu
-        - Sağ tık menüsü
+        - Popup (Pick a field and type)
+        - Alt+Shift+W shortcut
+        - Right-click menu
     validations:
       required: true
   - type: input
+    id: layout
+    attributes:
+      label: Keyboard layout
+      placeholder: e.g. English (QWERTY), Turkish Q
+  - type: input
     id: browser
     attributes:
-      label: Tarayıcı ve sürüm
-      placeholder: ör. Chrome 141, Edge 141, Brave 1.83
+      label: Browser and version
+      placeholder: e.g. Chrome 141, Edge 141, Brave 1.83
   - type: input
     id: version
     attributes:
-      label: Autowriter sürümü
-      placeholder: Popup'ın üst kısmında yazar, ör. v1.1.0
+      label: Autowriter version
+      placeholder: Shown at the top of the popup, e.g. v1.2.0
   - type: textarea
     id: extra
     attributes:
-      label: Ek bilgi
-      description: Ekran görüntüsü ya da konsol hatası (F12 → Console) varsa ekle.
+      label: Anything else
+      description: Screenshots or console errors (F12 → Console) help a lot.

@@ -1,0 +1,185 @@
+{
+  "extName": {
+    "message": "Autowriter"
+  },
+  "extDescription": {
+    "message": "Kopyaladığın metni seçtiğin alana insan gibi yazar: değişken hız, gerçekçi yazım hataları ve düzeltmeler."
+  },
+  "cmdStart": {
+    "message": "Kopyalanan metni odaktaki alana yaz (tekrar basınca durur)"
+  },
+  "menuTypeHere": {
+    "message": "Autowriter: metni buraya yaz"
+  },
+  "githubTitle": {
+    "message": "GitHub'da aç"
+  },
+  "previewLabel": {
+    "message": "Canlı önizleme"
+  },
+  "previewSample": {
+    "message": "Merhaba! Bu satırları ben yazmıyorum, Autowriter yazıyor. Arada bir tuşu kaçırıyor, fark edip düzeltiyor."
+  },
+  "metaSpeed": {
+    "message": "$1 kelime/dk, %$2 hata"
+  },
+  "fixesOne": {
+    "message": "1 düzeltme"
+  },
+  "fixesMany": {
+    "message": "$1 düzeltme"
+  },
+  "sourceLabel": {
+    "message": "Metin kaynağı"
+  },
+  "sourceClipboard": {
+    "message": "Kopyaladığım metin"
+  },
+  "sourceCustom": {
+    "message": "Kendi metnim"
+  },
+  "clipReading": {
+    "message": "Panodaki metin okunuyor…"
+  },
+  "clipEmpty": {
+    "message": "Pano boş. Önce yazdırmak istediğin metni kopyala."
+  },
+  "clipChars": {
+    "message": "$1 karakter: "
+  },
+  "customPlaceholder": {
+    "message": "Yazılacak metni buraya yapıştır"
+  },
+  "styleHead": {
+    "message": "Yazış tarzı"
+  },
+  "presetCalm": {
+    "message": "Sakin"
+  },
+  "presetNatural": {
+    "message": "Doğal"
+  },
+  "presetFast": {
+    "message": "Hızlı"
+  },
+  "presetPro": {
+    "message": "Usta"
+  },
+  "layoutLabel": {
+    "message": "Klavye"
+  },
+  "layout_en": {
+    "message": "İngilizce (QWERTY)"
+  },
+  "layout_tr_q": {
+    "message": "Türkçe Q"
+  },
+  "layout_tr_f": {
+    "message": "Türkçe F"
+  },
+  "layout_de": {
+    "message": "Almanca (QWERTZ)"
+  },
+  "layout_fr": {
+    "message": "Fransızca (AZERTY)"
+  },
+  "layout_es": {
+    "message": "İspanyolca (QWERTY)"
+  },
+  "layout_dvorak": {
+    "message": "Dvorak"
+  },
+  "tune": {
+    "message": "İnce ayar"
+  },
+  "speed": {
+    "message": "Hız"
+  },
+  "typoRate": {
+    "message": "Hata oranı"
+  },
+  "startDelay": {
+    "message": "Başlamadan önce bekle"
+  },
+  "wpmValue": {
+    "message": "$1 kelime/dk"
+  },
+  "percentValue": {
+    "message": "%$1"
+  },
+  "delayNow": {
+    "message": "hemen"
+  },
+  "delaySeconds": {
+    "message": "$1 sn"
+  },
+  "startBtn": {
+    "message": "Alan seç ve yaz"
+  },
+  "stopBtn": {
+    "message": "Durdur"
+  },
+  "errCustomEmpty": {
+    "message": "Yazılacak metin boş. Kutucuğa bir metin yapıştır."
+  },
+  "errNoTab": {
+    "message": "Açık bir sekme bulunamadı."
+  },
+  "errRestricted": {
+    "message": "Tarayıcı bu sayfada eklentilere izin vermiyor. Normal bir web sayfasında dene."
+  },
+  "stoppedMsg": {
+    "message": "Yazma durduruldu."
+  },
+  "scFocused": {
+    "message": "Odaktaki alana yaz"
+  },
+  "scStop": {
+    "message": "Durdur"
+  },
+  "scRightClick": {
+    "message": "Sağ tık"
+  },
+  "statusTyping": {
+    "message": "Yazıyor"
+  },
+  "statusCountdown": {
+    "message": "$1 saniye sonra başlıyor"
+  },
+  "statusDone": {
+    "message": "Bitti: $1 karakter"
+  },
+  "statusDoneFixes": {
+    "message": "Bitti: $1 karakter, $2 düzeltme"
+  },
+  "statusStopped": {
+    "message": "Yazma durduruldu"
+  },
+  "statusFailed": {
+    "message": "Yazılamadı: $1"
+  },
+  "pickPrompt": {
+    "message": "Yazılacak alana tıkla"
+  },
+  "pickNotField": {
+    "message": "Burası bir yazı alanı değil. Bir metin kutusuna tıkla"
+  },
+  "pickTag": {
+    "message": "Buraya yaz"
+  },
+  "btnStop": {
+    "message": "Durdur"
+  },
+  "btnCancel": {
+    "message": "İptal"
+  },
+  "toastPassword": {
+    "message": "Güvenlik için şifre alanlarına yazmıyorum."
+  },
+  "toastFocusFirst": {
+    "message": "Önce yazılacak alana tıkla, sonra kısayola bas."
+  },
+  "toastNoField": {
+    "message": "Yazılabilir bir alan bulunamadı."
+  }
+}

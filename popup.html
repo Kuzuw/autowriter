@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -18,8 +18,8 @@
         href="https://github.com/Kuzuw/autowriter"
         target="_blank"
         rel="noopener"
-        title="GitHub'da aç"
-        aria-label="GitHub'da aç"
+        data-i18n-title="githubTitle"
+        data-i18n-aria-label="githubTitle"
       >
         <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
           <path
@@ -30,80 +30,88 @@
       </a>
     </header>
 
-    <!-- Canlı önizleme: gerçek yazma motoruyla, hatalar ve düzeltmeler dahil -->
-    <section class="page" aria-label="Canlı önizleme">
+    <!-- Live preview: the real engine typing with your settings, typos included -->
+    <section class="page" data-i18n-aria-label="previewLabel">
       <div class="page-text" id="preview" aria-hidden="true"></div>
       <div class="page-meta">
-        <span id="metaSpeed">55 kelime/dk</span>
-        <span id="metaFixes" class="fixes">0 düzeltme</span>
+        <span id="metaSpeed"></span>
+        <span id="metaFixes" class="fixes"></span>
       </div>
     </section>
 
     <section class="block">
-      <div class="segmented" role="radiogroup" aria-label="Metin kaynağı">
-        <label><input type="radio" name="source" value="clipboard" /><span>Kopyaladığım metin</span></label>
-        <label><input type="radio" name="source" value="custom" /><span>Kendi metnim</span></label>
+      <div class="segmented" role="radiogroup" data-i18n-aria-label="sourceLabel">
+        <label><input type="radio" name="source" value="clipboard" /><span data-i18n="sourceClipboard"></span></label>
+        <label><input type="radio" name="source" value="custom" /><span data-i18n="sourceCustom"></span></label>
       </div>
-      <p class="clip" id="clipInfo">Panodaki metin okunuyor…</p>
-      <textarea id="customText" rows="3" placeholder="Yazılacak metni buraya yapıştır" hidden></textarea>
+      <p class="clip" id="clipInfo" data-i18n="clipReading"></p>
+      <textarea id="customText" rows="3" data-i18n-placeholder="customPlaceholder" hidden></textarea>
     </section>
 
     <section class="block">
-      <div class="block-head">
-        <span>Yazış tarzı</span>
+      <div class="block-head" id="styleHead" data-i18n="styleHead"></div>
+      <div class="keys" role="radiogroup" aria-labelledby="styleHead">
+        <button class="key" data-preset="calm" role="radio" data-i18n="presetCalm"></button>
+        <button class="key" data-preset="natural" role="radio" data-i18n="presetNatural"></button>
+        <button class="key" data-preset="fast" role="radio" data-i18n="presetFast"></button>
+        <button class="key" data-preset="pro" role="radio" data-i18n="presetPro"></button>
       </div>
-      <div class="keys" role="radiogroup" aria-label="Yazış tarzı">
-        <button class="key" data-preset="calm" role="radio">Sakin</button>
-        <button class="key" data-preset="natural" role="radio">Doğal</button>
-        <button class="key" data-preset="fast" role="radio">Hızlı</button>
-        <button class="key" data-preset="pro" role="radio">Usta</button>
+
+      <div class="layout-row">
+        <label for="layout" data-i18n="layoutLabel"></label>
+        <span class="select">
+          <select id="layout">
+            <option value="en" data-i18n="layout_en"></option>
+            <option value="tr-q" data-i18n="layout_tr_q"></option>
+            <option value="tr-f" data-i18n="layout_tr_f"></option>
+            <option value="de" data-i18n="layout_de"></option>
+            <option value="fr" data-i18n="layout_fr"></option>
+            <option value="es" data-i18n="layout_es"></option>
+            <option value="dvorak" data-i18n="layout_dvorak"></option>
+          </select>
+        </span>
       </div>
 
       <details class="tune" id="tune">
-        <summary>İnce ayar</summary>
+        <summary data-i18n="tune"></summary>
         <div class="slider">
-          <label for="wpm">Hız</label>
-          <output id="wpmVal">55 kelime/dk</output>
+          <label for="wpm" data-i18n="speed"></label>
+          <output id="wpmVal"></output>
           <input id="wpm" type="range" min="10" max="200" step="5" />
         </div>
         <div class="slider">
-          <label for="typoRate">Hata oranı</label>
-          <output id="typoVal">%4</output>
+          <label for="typoRate" data-i18n="typoRate"></label>
+          <output id="typoVal"></output>
           <input id="typoRate" type="range" min="0" max="15" step="1" />
         </div>
         <div class="slider">
-          <label for="startDelay">Başlamadan önce bekle</label>
-          <output id="delayVal">2 sn</output>
+          <label for="startDelay" data-i18n="startDelay"></label>
+          <output id="delayVal"></output>
           <input id="startDelay" type="range" min="0" max="10" step="1" />
         </div>
       </details>
     </section>
 
     <div class="actions">
-      <button id="start" class="cta">Alan seç ve yaz</button>
-      <button id="stop" class="ghost">Durdur</button>
+      <button id="start" class="cta" data-i18n="startBtn"></button>
+      <button id="stop" class="ghost" data-i18n="stopBtn"></button>
     </div>
     <p id="msg" class="msg" role="status"></p>
 
     <dl class="shortcuts">
       <div>
         <dt><kbd>Alt</kbd><kbd>Shift</kbd><kbd>W</kbd></dt>
-        <dd>Odaktaki alana yaz</dd>
+        <dd data-i18n="scFocused"></dd>
       </div>
       <div>
         <dt><kbd>Esc</kbd></dt>
-        <dd>Durdur</dd>
+        <dd data-i18n="scStop"></dd>
       </div>
       <div>
-        <dt><kbd>Sağ tık</kbd></dt>
-        <dd>Autowriter: metni buraya yaz</dd>
+        <dt><kbd data-i18n="scRightClick"></kbd></dt>
+        <dd data-i18n="menuTypeHere"></dd>
       </div>
     </dl>
-
-    <footer class="credit">
-      <span>Kuzuw tarafından yapıldı</span>
-      <a class="vibe" href="https://github.com/Kuzuw/autowriter" target="_blank" rel="noopener">vibe coded</a>
-    </footer>
 
     <script src="engine.js"></script>
     <script src="popup.js"></script>

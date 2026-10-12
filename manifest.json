@@ -1,10 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Autowriter",
-  "version": "1.1.0",
+  "name": "__MSG_extName__",
+  "default_locale": "en",
+  "version": "1.2.0",
   "author": "Kuzuw",
   "homepage_url": "https://github.com/Kuzuw/autowriter",
-  "description": "Kopyaladığın metni seçtiğin alana insan gibi yazar: değişken hız, gerçekçi yazım hataları ve düzeltmeler.",
+  "description": "__MSG_extDescription__",
   "permissions": [
     "activeTab",
     "scripting",
@@ -13,7 +14,7 @@
     "clipboardRead"
   ],
   "action": {
-    "default_title": "Autowriter",
+    "default_title": "__MSG_extName__",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
@@ -50,7 +51,7 @@
       "suggested_key": {
         "default": "Alt+Shift+W"
       },
-      "description": "Panodaki metni odaktaki alana insan gibi yaz (çalışırken tekrar basınca durdurur)"
+      "description": "__MSG_cmdStart__"
     }
   }
 }

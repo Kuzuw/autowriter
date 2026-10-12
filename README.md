@@ -1,184 +1,200 @@
 <p align="center">
-  <img src="docs/banner.png" alt="Autowriter: kopyaladığın metni seçtiğin alana insan gibi yazan Chrome eklentisi" width="100%">
+  <img src="docs/banner.png" alt="Autowriter types your copied text into any field, the way a person would" width="100%">
 </p>
 
 <p align="center">
   <a href="https://github.com/Kuzuw/autowriter/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Kuzuw/autowriter/actions/workflows/ci.yml/badge.svg"></a>
-  <img alt="Manifest V3" src="https://img.shields.io/badge/Manifest-V3-3355FF?style=flat-square">
-  <img alt="Chrome, Edge, Brave" src="https://img.shields.io/badge/Chrome%20%7C%20Edge%20%7C%20Brave-destekli-1B2340?style=flat-square">
-  <a href="LICENSE"><img alt="MIT lisansı" src="https://img.shields.io/badge/lisans-MIT-1B2340?style=flat-square"></a>
-  <img alt="Vibe coded" src="https://img.shields.io/badge/vibe-coded-E5484D?style=flat-square">
-  <a href="https://github.com/Kuzuw"><img alt="Yapımcı: Kuzuw" src="https://img.shields.io/badge/yap%C4%B1mc%C4%B1-Kuzuw-1B2340?style=flat-square"></a>
+  <a href="https://github.com/Kuzuw/autowriter/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/Kuzuw/autowriter?style=flat-square&color=3355FF&label=release"></a>
+  <img alt="Manifest V3" src="https://img.shields.io/badge/Manifest-V3-1B2340?style=flat-square">
+  <img alt="Chrome, Edge, Brave" src="https://img.shields.io/badge/Chrome%20%7C%20Edge%20%7C%20Brave-supported-1B2340?style=flat-square">
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-1B2340?style=flat-square"></a>
 </p>
 
 <p align="center">
-  <b>Metni kopyala, alana tıkla, gerisini Autowriter'a bırak.</b><br>
-  Harf harf, değişken hızla yazar. Arada yanlış tuşa basar, fark eder, silip düzeltir.
+  <b>Copy some text, click a field, and let Autowriter type it.</b><br>
+  Key by key, at an uneven pace. Now and then it hits the wrong key, notices, and fixes it.
 </p>
 
 <p align="center">
-  <img src="docs/demo.gif" alt="Autowriter bir not alanına metni hata yapıp düzelterek yazıyor" width="760">
+  <img src="docs/demo.gif" alt="Autowriter typing a note with a few typos that it corrects" width="760">
 </p>
 
 ---
 
-## İçindekiler
+## Contents
 
-- [Özellikler](#özellikler)
-- [Kurulum](#kurulum)
-- [Kullanım](#kullanım)
-- [Ayarlar](#ayarlar)
-- [Nasıl çalışır?](#nasıl-çalışır)
-- [Gizlilik](#gizlilik)
-- [Geliştirme](#geliştirme)
-- [Vibe coded](#vibe-coded)
-- [Lisans](#lisans)
+- [Features](#features)
+- [Install](#install)
+- [Usage](#usage)
+- [Settings](#settings)
+- [Keyboard layouts](#keyboard-layouts)
+- [How it works](#how-it-works)
+- [Privacy](#privacy)
+- [Development](#development)
+- [Türkçe](#türkçe)
+- [License](#license)
 
-## Özellikler
+## Features
 
-- **İnsan gibi ritim:** Her tuş arası farklı. Boşlukta, virgülde ve nokta sonrasında duraksar, ara sıra "düşünür". Hız da yazdıkça hafifçe dalgalanır.
-- **Gerçekçi yazım hataları:** Türkçe Q klavyede yanındaki tuşa basma, harfi iki kez yazma, iki harfin yerini karıştırma ve harf atlama. Hatayı hemen ya da birkaç harf sonra fark eder, siler, doğrusunu yazar.
-- **Her alanda çalışır:** `input`, `textarea` ve `contenteditable` editörler. iframe ve Shadow DOM içindeki alanlar dahil.
-- **Üç başlatma yolu:** Popup'tan alan seçme, `Alt+Shift+W` kısayolu ve sağ tık menüsü.
-- **Canlı önizleme:** Popup, seçtiğin ayarlarla nasıl yazacağını önceden gösterir.
-- **Hazır yazış tarzları:** Sakin, Doğal, Hızlı, Usta. İstersen hız ve hata oranını kendin ayarla.
-- **Her an durdurulabilir:** `Esc` tuşu ya da ekrandaki **Durdur** düğmesi.
-- **Açık ve koyu tema:** Sistem temanı izler.
-- **Gizlilik dostu:** Ağ isteği yok, veri toplama yok. Şifre alanlarına yazmaz.
+- **Human rhythm.** Every keystroke takes a slightly different time. It slows down at spaces, commas and full stops, sometimes stops to "think", and its overall pace drifts as it goes.
+- **Realistic typos.** Hitting a neighbouring key, doubling a letter, swapping two letters, skipping one. It notices right away or a few letters later, backspaces, and types the right thing.
+- **Your keyboard.** Typos follow the layout you pick: English QWERTY, Turkish Q, Turkish F, German QWERTZ, French AZERTY, Spanish or Dvorak.
+- **Works where you type.** `input`, `textarea` and `contenteditable` editors, including fields inside iframes and Shadow DOM.
+- **Three ways to start.** Pick a field from the popup, press `Alt+Shift+W`, or use the right-click menu.
+- **Live preview.** The popup shows how it will type with your current settings, mistakes included.
+- **Stop any time.** Press `Esc` or click **Stop** on the on-page indicator.
+- **English and Turkish UI.** Follows your browser language. Light and dark themes follow your system.
+- **Private by design.** No network requests, no tracking. It never types into password fields.
 
-## Kurulum
+## Install
 
-### Hazır paketten
+### From a release
 
-1. [Releases](https://github.com/Kuzuw/autowriter/releases) sayfasından son `autowriter-x.y.z.zip` dosyasını indir ve bir klasöre çıkar. (Release yoksa sayfanın üstündeki **Code → Download ZIP** ile repoyu indirmen de olur.)
-2. Chrome'da `chrome://extensions` adresini aç.
-3. Sağ üstten **Geliştirici modu**'nu aç.
-4. **Paketlenmemiş öğe yükle**'ye tıkla ve çıkardığın klasörü seç.
+1. Download `autowriter-x.y.z.zip` from the [latest release](https://github.com/Kuzuw/autowriter/releases/latest) and unzip it.
+2. Open `chrome://extensions`.
+3. Turn on **Developer mode** (top right).
+4. Click **Load unpacked** and select the unzipped folder.
 
-### Kaynaktan
+### From source
 
 ```bash
 git clone https://github.com/Kuzuw/autowriter
 ```
 
-Sonra yukarıdaki 2-4. adımlarla `autowriter` klasörünü yükle.
+Then follow steps 2–4 with the `autowriter` folder.
 
-> Edge (`edge://extensions`), Brave (`brave://extensions`) ve diğer Chromium tabanlı tarayıcılarda da aynı adımlarla çalışır.
+> Edge (`edge://extensions`), Brave (`brave://extensions`) and other Chromium-based browsers work the same way.
 
-## Kullanım
+## Usage
 
-| Yol | Nasıl |
+| How | Steps |
 | --- | --- |
-| **Popup** | Metni kopyala, eklenti ikonuna tıkla, **Alan seç ve yaz**'a bas, yazılacak kutuya tıkla. |
-| **Kısayol** | Metni kopyala, yazı alanına tıkla, `Alt+Shift+W` tuşlarına bas. Yazarken tekrar basarsan durur. |
-| **Sağ tık** | Yazı alanına sağ tıkla, **Autowriter: metni buraya yaz**'ı seç. |
+| **Popup** | Copy your text, click the toolbar icon, press **Pick a field and type**, then click the field. |
+| **Shortcut** | Copy your text, click into a field, press `Alt+Shift+W`. Press it again to stop. |
+| **Right-click** | Right-click a field and choose **Autowriter: type here**. |
 
-Kısayolu `chrome://extensions/shortcuts` adresinden değiştirebilirsin.
+You can change the shortcut at `chrome://extensions/shortcuts`.
 
 <table>
   <tr>
-    <td align="center"><img src="docs/popup-light.png" width="300" alt="Popup, açık tema"><br><sub>Popup, açık tema</sub></td>
-    <td align="center"><img src="docs/popup-tune-dark.png" width="300" alt="Popup, koyu tema ve ince ayar"><br><sub>Koyu tema ve ince ayar</sub></td>
+    <td align="center"><img src="docs/popup-light.png" width="300" alt="Popup in light theme"><br><sub>Popup</sub></td>
+    <td align="center"><img src="docs/popup-dark.png" width="300" alt="Popup in dark theme with fine-tune open"><br><sub>Dark theme, fine-tune open</sub></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/pick.png" width="420" alt="Alan seçme"><br><sub>Yazılacak alanı seçme</sub></td>
-    <td align="center"><img src="docs/done.png" width="420" alt="Yazma bitti"><br><sub>Bitince karakter ve düzeltme sayısı</sub></td>
+    <td align="center"><img src="docs/pick.png" width="420" alt="Picking a field"><br><sub>Picking a field</sub></td>
+    <td align="center"><img src="docs/done.png" width="420" alt="Finished typing"><br><sub>Done, with a count of characters and fixes</sub></td>
   </tr>
 </table>
 
-## Ayarlar
+## Settings
 
-| Yazış tarzı | Hız | Hata oranı | Kimin gibi |
+| Typing style | Speed | Typo rate | Feels like |
 | --- | --- | --- | --- |
-| Sakin | 35 kelime/dk | %2 | Düşünerek yazan biri |
-| Doğal | 55 kelime/dk | %4 | Ortalama bir kullanıcı (varsayılan) |
-| Hızlı | 85 kelime/dk | %6 | Hızlı ama özensiz |
-| Usta | 125 kelime/dk | %2 | On parmak yazan biri |
+| Calm | 35 wpm | 2% | Someone choosing their words |
+| Natural | 55 wpm | 4% | An average typist (default) |
+| Fast | 85 wpm | 6% | Quick and a bit sloppy |
+| Pro | 125 wpm | 2% | A touch typist |
 
-**İnce ayar** bölümünden:
+Under **Fine-tune**:
 
-- **Hız:** 10–200 kelime/dk
-- **Hata oranı:** %0–15. Sıfır yaparsan hiç hata yapmaz.
-- **Başlamadan önce bekle:** 0–10 saniye. Pencere değiştirmek ya da imleci yerleştirmek için zaman tanır.
-- **Metin kaynağı:** Kopyaladığın metin ya da popup'a yapıştırdığın kendi metnin.
+- **Speed:** 10–200 words per minute
+- **Typo rate:** 0–15%. Set it to 0 for no mistakes at all.
+- **Delay before typing:** 0–10 seconds, time to switch windows or place the cursor.
+- **Text source:** the text you copied, or your own text pasted into the popup.
 
-## Nasıl çalışır?
+## Keyboard layouts
 
-Yazma mantığı DOM'dan bağımsız tek bir modülde, [`engine.js`](engine.js) içinde:
+"Hit the key next to it" typos are drawn from the layout you choose, so a French user mistypes `a` as `z` and a Turkish user mistypes `ş` as `i`. On first run the layout is chosen from your browser language.
 
-1. Hedef hız, karakter başına ortalama bir süreye çevrilir (`60000 / (kelime/dk × 5)` ms).
-2. Her tuş bu sürenin 0,55 ile 1,6 katı arasında rastgele bekler. Her 15 tuşta bir genel ritim biraz hızlanır ya da yavaşlar.
-3. Boşluk, noktalama ve satır sonlarına ek duraklama eklenir; nadiren 0,5–1,6 sn'lik "düşünme" molası verilir.
-4. Bir harf hata oranına göre seçilirse dört hata türünden biri uygulanır. Yanlış harften sonra 0–3 doğru harf daha yazılır, kısa bir duraksamadan sonra hepsi silinip doğrusu yazılır.
+| Layout | Letter rows |
+| --- | --- |
+| English (QWERTY) | `qwertyuiop` `asdfghjkl` `zxcvbnm` |
+| Turkish Q | `qwertyuıopğü` `asdfghjklşi` `zxcvbnmöç` |
+| Turkish F | `fgğıodrnhpqw` `uieaütkmlyşx` `jövcçzsb` |
+| German (QWERTZ) | `qwertzuiopü` `asdfghjklöä` `yxcvbnm` |
+| French (AZERTY) | `azertyuiop` `qsdfghjklmù` `wxcvbn` |
+| Spanish (QWERTY) | `qwertyuiop` `asdfghjklñ` `zxcvbnm` |
+| Dvorak | `pyfgcrl` `aoeuidhtns` `qjkxbmwvz` |
 
-Motor her durumda kaynak metnin birebir aynısını üretir. Bu, 300 farklı rastgele tohum ve Türkçe karakterli metinlerle [`test/engine.test.js`](test/engine.test.js) içinde sınanır.
+Missing your layout? It's one line in [`engine.js`](engine.js). Pull requests are welcome.
 
-Sayfa tarafında ([`content.js`](content.js)) her karakter, sitelerin gerçek klavye girişi gibi algıladığı `insertText` komutuyla yazılır; olmazsa yerel değer ayarlayıcıya ve `input` olayına düşer. Böylece React, Vue gibi çatılarla yapılmış formlar da değişikliği görür.
+## How it works
 
-## Gizlilik
+The typing logic lives in one DOM-free module, [`engine.js`](engine.js):
 
-Autowriter hiçbir veri toplamaz ve hiçbir yere göndermez. Ayrıntılar ve her iznin nedeni: [PRIVACY.md](PRIVACY.md)
+1. The target speed becomes an average delay per character: `60000 / (wpm × 5)` ms.
+2. Each keystroke waits a random 0.55–1.6× of that. Every 15 keys the overall pace drifts a little faster or slower.
+3. Spaces, punctuation and line breaks get extra pauses, with the odd 0.5–1.6 s "thinking" break.
+4. When a letter is picked for a typo, one of four mistakes happens. It may type 0–3 more correct letters, pause, backspace over all of it, then type the right text.
 
-## Geliştirme
+Whatever happens along the way, the final text always matches the source exactly. [`test/engine.test.js`](test/engine.test.js) checks this across 300 random seeds, every layout, and text in several languages.
+
+On the page, [`content.js`](content.js) types each character with the browser's `insertText` command, the same path real keyboard input takes, and falls back to the native value setter plus an `input` event. That way frameworks like React and Vue see every change.
+
+## Privacy
+
+Autowriter collects nothing and sends nothing anywhere. Details and the reason for each permission: [PRIVACY.md](PRIVACY.md).
+
+## Development
 
 ```bash
-npm test         # motor testleri + manifest kontrolü
-npm run build    # dist/autowriter-<sürüm>.zip
+npm test         # engine tests + manifest and locale checks
+npm run build    # dist/autowriter-<version>.zip
 ```
 
-Derleme adımı ya da bağımlılık yok. Elle denemek için [`test/playground.html`](test/playground.html) sayfasını kullan.
+There is no build step and no dependencies. Open [`test/playground.html`](test/playground.html) to try things by hand.
 
 ```
 autowriter/
-├── manifest.json        Eklenti tanımı (Manifest V3)
-├── engine.js            İnsan gibi yazma motoru
-├── content.js           Sayfada alan seçme, yazma, durum balonu
-├── background.js        Kısayol ve sağ tık menüsü
-├── popup.html/css/js    Ayarlar ve canlı önizleme
-├── icons/  fonts/       İkonlar ve gömülü Lora yazı tipi
-├── design/              İkon ve banner kaynakları
-├── docs/                README görselleri
-├── scripts/             Manifest kontrolü ve paketleme
-└── test/                Motor testleri ve deneme sayfası
+├── manifest.json        Extension manifest (MV3)
+├── engine.js            Human-like typing engine and keyboard layouts
+├── content.js           Field picker, typing, on-page indicator
+├── background.js        Shortcut and context menu
+├── popup.html/css/js    Settings and live preview
+├── _locales/            English and Turkish strings
+├── icons/  fonts/       Icons and the bundled Lora typeface
+├── design/              Icon and banner sources
+├── docs/                README images
+├── scripts/             Manifest check, packaging, locale generator
+└── test/                Engine tests and playground page
 ```
 
-GitHub'da yeni bir release yayınlandığında (etiket `v` + manifest sürümü, ör. `v1.1.0`) GitHub Actions zip paketini oluşturup release'e ekler. Katkı kuralları için [CONTRIBUTING.md](CONTRIBUTING.md), sürüm geçmişi için [CHANGELOG.md](CHANGELOG.md).
+UI strings live in [`scripts/locales.py`](scripts/locales.py). Edit them there and run `python3 scripts/locales.py` to regenerate `_locales/`.
 
-### Bilinen sınırlar
+Publishing a GitHub release tagged `v` + the manifest version (for example `v1.2.0`) builds the zip and attaches it to the release. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [CHANGELOG](CHANGELOG.md).
 
-- `chrome://` sayfalarında ve Chrome Web Store'da tarayıcı eklentilere izin vermez.
-- Google Docs gibi canvas tabanlı editörler klavye olaylarını kendine göre işlediği için sonuç değişebilir.
-- Tek satırlı alanlarda satır sonu boşluğa çevrilir, form yanlışlıkla gönderilmesin diye.
-- Eklentiyi kurmadan önce açık olan sekmelerde kısayol ve sağ tık için sayfayı bir kez yenilemek gerekir. Popup'tan başlatınca gerekmez.
+### Known limits
 
-## Vibe coded
+- Browsers don't let extensions run on `chrome://` pages or the Chrome Web Store.
+- Canvas-based editors such as Google Docs handle keyboard events their own way, so results may vary.
+- In single-line fields, line breaks become spaces so the form isn't submitted by accident.
+- On tabs opened before installing, reload the page once for the shortcut and right-click menu. Starting from the popup works without reloading.
 
-Bu proje **vibe coding** ile yapıldı. Fikir, yön ve kararlar [Kuzuw](https://github.com/Kuzuw)'dan; kodun büyük kısmı yapay zekâ (Claude) ile sohbet ederek yazıldı, sonra test edilip gerçek bir Chromium'da denendi. Hata görürsen [issue aç](https://github.com/Kuzuw/autowriter/issues/new/choose).
+### Responsible use
 
-## Sorumlu kullanım
+Autowriter is meant for demos, screen recordings, presentations, testing, and typing out your own text. Using it where exams, coursework or workplace rules forbid it is your responsibility.
 
-Autowriter demo, ekran kaydı, sunum, test ve kendi metinlerini doğal biçimde yazdırmak için yapıldı. Sınav, ödev ya da kurumun kurallarının yasakladığı yerlerde kullanmak kullanıcının sorumluluğundadır.
+## Türkçe
 
-## Lisans
+<details>
+<summary>Türkçe açıklama</summary>
 
-[MIT](LICENSE) © 2026 Kuzuw
+**Autowriter**, kopyaladığın metni seçtiğin alana insan gibi yazan bir Chrome eklentisidir. Değişken hızla yazar, noktalamada duraksar; arada yanlış tuşa basar, fark eder ve düzeltir.
 
-Gömülü [Lora](https://github.com/cyrealtype/Lora-Cyrillic) yazı tipi SIL Open Font License 1.1 ile lisanslıdır ([fonts/OFL.txt](fonts/OFL.txt)).
+- **Başlatma:** Popup'tan **Alan seç ve yaz**, `Alt+Shift+W` kısayolu ya da yazı alanında sağ tık → **Autowriter: metni buraya yaz**. `Esc` ile durur.
+- **Yazış tarzları:** Sakin, Doğal, Hızlı, Usta. İnce ayardan hız (10–200 kelime/dk), hata oranı (%0–15) ve başlama gecikmesi ayarlanır.
+- **Klavye düzeni:** Türkçe Q, Türkçe F, İngilizce QWERTY, Almanca QWERTZ, Fransızca AZERTY, İspanyolca ve Dvorak. Yazım hataları seçtiğin düzene göre yapılır.
+- **Dil:** Tarayıcın Türkçeyse arayüz Türkçe açılır.
+- **Gizlilik:** Ağ isteği yok, veri toplama yok, şifre alanlarına yazmaz.
+
+**Kurulum:** [Son sürümdeki](https://github.com/Kuzuw/autowriter/releases/latest) zip'i indirip çıkar, `chrome://extensions` sayfasında **Geliştirici modu**'nu aç, **Paketlenmemiş öğe yükle** ile klasörü seç.
+
+</details>
+
+## License
+
+[MIT](LICENSE) © 2026 Kuzuw. The bundled [Lora](https://github.com/cyrealtype/Lora-Cyrillic) typeface is licensed under the SIL Open Font License 1.1 ([fonts/OFL.txt](fonts/OFL.txt)).
 
 ---
 
-<details>
-<summary><b>English</b></summary>
-
-**Autowriter** is a Chrome (Manifest V3) extension that types the text on your clipboard into any field the way a person would: uneven rhythm, pauses at punctuation, and realistic typos (neighbouring keys on a Turkish Q layout, doubled letters, swapped letters, skipped letters) that it notices and corrects.
-
-- Start it from the popup (pick a field), with `Alt+Shift+W`, or from the right-click menu. Press `Esc` to stop.
-- Presets: Calm, Natural, Fast, Pro. Fine-tune speed (10–200 WPM), typo rate (0–15%) and start delay.
-- Works in `input`, `textarea` and `contenteditable` fields, including iframes and Shadow DOM.
-- No network requests, no data collection, never types into password fields.
-
-Install: download the zip from Releases (or clone the repo), open `chrome://extensions`, enable Developer mode, click **Load unpacked** and choose the folder.
-
-Made by [Kuzuw](https://github.com/Kuzuw). Vibe coded with AI assistance. MIT licensed.
-
-</details>
+<sub>Autowriter was built with help from Claude, Anthropic's AI assistant.</sub>

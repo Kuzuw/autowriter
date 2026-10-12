@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr"><head><meta charset="utf-8"><style>
+<html lang="en"><head><meta charset="utf-8"><style>
 @font-face{font-family:'Lora';src:url('../fonts/Lora-Variable.ttf') format('truetype');font-weight:400 700}
 @font-face{font-family:'Lora';src:url('../fonts/Lora-Italic-Variable.ttf') format('truetype');font-weight:400 700;font-style:italic}
 html,body{margin:0}
@@ -14,17 +14,17 @@ h1{margin:0;font:600 92px/1 'Lora',serif;letter-spacing:-.02em}
 .typed{margin-top:40px;font:400 34px/1.3 'Lora',serif}
 .typed s{color:#e5484d;text-decoration-thickness:3px}
 .caret{display:inline-block;width:3px;height:36px;background:#3355ff;vertical-align:-6px;margin-left:2px}
-.credit{position:absolute;left:132px;bottom:56px;display:flex;align-items:center;gap:16px;font:500 20px 'Inter',sans-serif;color:#7a84a0}
-.credit b{color:#1b2340;font-weight:600}
-.vibe{padding:4px 14px;border:1.5px dashed #7a84a0;border-radius:999px;font:italic 500 20px 'Lora',serif;color:#4a5470}
+.layouts{position:absolute;left:132px;bottom:58px;display:flex;flex-wrap:wrap;gap:8px;max-width:640px}
+.layouts span{padding:6px 12px 5px;background:#fff;border:1px solid #dce2ee;border-bottom:4px solid #c7cfe0;border-radius:10px;font:600 16px 'Inter',sans-serif;color:#4a5470}
+.layouts span.on{background:#e7ecff;border-color:#3355ff;color:#1b2340}
 .shot{position:absolute;right:92px;top:70px;width:360px;border-radius:18px;box-shadow:0 30px 70px rgba(27,35,64,.22),0 0 0 1px #dce2ee}
 </style></head><body><div class="b" id="b">
 <div class="grid"></div><div class="margin"></div>
 <div class="left">
   <div class="logo"><img src="icon-512.png" alt=""><h1>Autowriter</h1></div>
-  <p class="tag">Kopyaladığın metni seçtiğin alana insan gibi yazan Chrome eklentisi.</p>
-  <div class="typed">Arada tuşu kaçırır, fark eder, düzelti<s>t</s>r<span class="caret"></span></div>
+  <p class="tag">Types your copied text into any field, the way a person would.</p>
+  <div class="typed">It misses a key, notices, and fixe<s>d</s>s<span class="caret"></span></div>
 </div>
 <img class="shot" src="../docs/popup-light.png" alt="">
-<div class="credit"><span><b>Kuzuw</b> tarafından yapıldı</span><span class="vibe">vibe coded</span></div>
+<div class="layouts"><span class="on">QWERTY</span><span>Turkish Q</span><span>Turkish F</span><span>QWERTZ</span><span>AZERTY</span><span>Dvorak</span></div>
 </div></body></html>

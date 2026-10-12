@@ -1,35 +1,46 @@
-# Katkıda bulunma
+# Contributing
 
-Autowriter'a katkı yapmak istediğin için teşekkürler. Hata bildirimleri, öneriler ve pull request'ler açıktır.
+Thanks for wanting to help with Autowriter. Bug reports, ideas and pull requests are all welcome.
 
-## Geliştirme ortamı
+## Setup
 
-Derleme adımı yok; eklenti düz JavaScript, HTML ve CSS'ten oluşur.
+There's no build step: the extension is plain JavaScript, HTML and CSS.
 
-1. Repoyu klonla: `git clone https://github.com/Kuzuw/autowriter`
-2. `chrome://extensions` sayfasında **Geliştirici modu**'nu aç, **Paketlenmemiş öğe yükle** ile klasörü seç.
-3. Kodu değiştirdikten sonra eklenti kartındaki yenile düğmesine bas ve denediğin sekmeyi yenile.
-4. Denemek için `test/playground.html` dosyasını tarayıcıda aç (dosya URL'lerinde çalışması için eklenti ayrıntılarından "Dosya URL'lerine erişime izin ver"i aç) ya da `python3 -m http.server` ile sun.
+1. Clone the repo: `git clone https://github.com/Kuzuw/autowriter`
+2. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and select the folder.
+3. After changing code, press the reload button on the extension card and reload the tab you're testing.
+4. To try things by hand, serve the repo with `python3 -m http.server` and open `test/playground.html`.
 
-## Testler
+## Tests
 
 ```bash
-npm test         # yazma motoru testleri + manifest kontrolü
-npm run build    # dist/autowriter-<sürüm>.zip üretir
+npm test         # engine tests + manifest and locale checks
+npm run build    # builds dist/autowriter-<version>.zip
 ```
 
-Yazma motoru (`engine.js`) DOM'dan bağımsızdır. Motoru değiştirirsen `test/engine.test.js` içindeki temel kural hep geçmeli: hatalar ne olursa olsun, sonuçta yazılan metin kaynak metinle birebir aynı olmalı.
+The typing engine (`engine.js`) doesn't touch the DOM. If you change it, the core rule in `test/engine.test.js` must keep passing: whatever typos happen, the final text must equal the source text exactly.
 
-## Pull request kuralları
+## Adding a keyboard layout
 
-- Bir PR tek bir konuyu çözsün.
-- Kullanıcıya görünen metinler Türkçe, kısa ve net olsun.
-- Yeni bir izin (`permissions`) eklemen gerekiyorsa PR açıklamasında nedenini yaz.
-- `CHANGELOG.md` dosyasının en üstüne bir satır ekle.
+1. Add an entry to `LAYOUTS` in `engine.js`. Write the three letter rows in lowercase, aligned like a physical keyboard (use a space for a non-letter key).
+2. Add a `layout_<id>` string for every language in `scripts/locales.py`, then run `python3 scripts/locales.py`.
+3. Add an `<option>` to the layout picker in `popup.html`.
+4. Add a neighbour check to `test/engine.test.js`.
 
-## Görseller
+## Translations
 
-İkon ve banner `design/` klasöründeki HTML dosyalarından üretilir:
+All UI strings live in `scripts/locales.py`. Add a column for your language there, run the script, and `npm test` will tell you if anything is missing.
+
+## Pull requests
+
+- Keep each PR to one topic.
+- Keep UI text short and plain, and add it in every language.
+- If you need a new permission, explain why in the PR description.
+- Add a line to the top of `CHANGELOG.md`.
+
+## Images
+
+The icon and banner are rendered from the HTML files in `design/`:
 
 ```bash
 python3 design/render_icons.py

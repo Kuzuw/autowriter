@@ -1,8 +1,8 @@
 {
   "name": "autowriter",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
-  "description": "Kopyaladığın metni seçtiğin alana insan gibi yazan Chrome eklentisi.",
+  "description": "Chrome extension that types your copied text into any field like a real person.",
   "author": "Kuzuw",
   "license": "MIT",
   "homepage": "https://github.com/Kuzuw/autowriter",

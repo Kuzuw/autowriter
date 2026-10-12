@@ -1,7 +1,7 @@
 name: Release
 
-# GitHub'da bir release yayınlandığında (ör. etiket v1.1.0) eklenti zip'ini
-# oluşturup o release'e ekler.
+# When a GitHub release is published (tag e.g. v1.2.0), build the extension
+# zip and attach it to that release.
 on:
   release:
     types: [published]
@@ -19,19 +19,19 @@ jobs:
         with:
           node-version: 20
 
-      - name: Etiket ve manifest sürümü aynı mı
+      - name: Check that the tag matches the manifest version
         env:
           TAG: ${{ github.event.release.tag_name }}
         run: |
           VERSION=$(node -p "require('./manifest.json').version")
           if [ "${TAG#v}" != "$VERSION" ]; then
-            echo "Etiket ($TAG) manifest sürümüyle ($VERSION) uyuşmuyor"; exit 1
+            echo "Tag ($TAG) does not match manifest version ($VERSION)"; exit 1
           fi
 
       - run: npm test
       - run: npm run build
 
-      - name: Zip'i release'e ekle
+      - name: Attach the zip to the release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.event.release.tag_name }}

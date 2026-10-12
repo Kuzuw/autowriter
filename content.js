@@ -4,7 +4,15 @@
   window.__autowriterLoaded = true;
 
   const Engine = self.AutowriterEngine;
-  const DEFAULTS = { wpm: 55, typoRate: 4, startDelay: 2, source: 'clipboard', customText: '' };
+  const L = (key, ...subs) => chrome.i18n.getMessage(key, subs.map(String)) || key;
+  const DEFAULTS = {
+    wpm: 55,
+    typoRate: 4,
+    startDelay: 2,
+    source: 'clipboard',
+    customText: '',
+    layout: Engine.layoutForLanguage(chrome.i18n.getUILanguage()),
+  };
 
   const state = { running: false, abort: false };
   let cancelSleep = null;
@@ -19,7 +27,7 @@
       }
     });
 
-  // ---------------------------------------------------------------- yardımcılar
+  // ----------------------------------------------------------------- helpers
 
   const abortError = () => new Error('aborted');
 
@@ -53,7 +61,7 @@
     return false;
   }
 
-  // Yazılabilir en yakın öğeyi bulur (input/textarea ya da contenteditable "host")
+  // Finds the nearest editable element (input/textarea or the contenteditable host)
   function closestEditable(node) {
     while (node) {
       if (node.nodeType === 1) {
@@ -92,7 +100,7 @@
         sel.addRange(range);
       }
     } catch (e) {
-      /* bazı input türleri seçimi desteklemez */
+      /* some input types don't support selection */
     }
   }
 
@@ -104,7 +112,7 @@
       const sel = window.getSelection();
       if (sel.rangeCount) return { range: sel.getRangeAt(0).cloneRange() };
     } catch (e) {
-      /* yoksay */
+      /* ignore */
     }
     return null;
   }
@@ -120,11 +128,11 @@
         el.setSelectionRange(saved.s, saved.e);
       }
     } catch (e) {
-      /* yoksay */
+      /* ignore */
     }
   }
 
-  // ------------------------------------------------------------------ pano
+  // --------------------------------------------------------------- clipboard
 
   async function readClipboard(restoreEl) {
     let text = '';
@@ -137,7 +145,7 @@
       if (document.execCommand('paste')) text = ta.value;
       ta.remove();
     } catch (e) {
-      /* yoksay */
+      /* ignore */
     }
     if (restoreEl) {
       restoreEl.focus({ preventScroll: true });
@@ -147,7 +155,7 @@
       try {
         text = await navigator.clipboard.readText();
       } catch (e) {
-        /* izin yok */
+        /* no permission */
       }
     }
     return text || '';
@@ -158,9 +166,9 @@
     return readClipboard(el);
   }
 
-  // ------------------------------------------------------------ durum balonu
+  // ------------------------------------------------------------ status pill
 
-  // Sayfanın CSS'inden etkilenmemesi için Shadow DOM içinde çizilir.
+  // Drawn inside a Shadow DOM so the page's CSS can't affect it.
   const OVERLAY_CSS = `
     :host { all: initial; }
     .pill {
@@ -217,7 +225,7 @@
         <span class="icon"><span class="bar-caret"></span><span class="tick">✓</span><span class="dot"></span></span>
         <span class="label"></span>
         <span class="pct"></span>
-        <button type="button"><kbd>Esc</kbd><span class="btn-text">Durdur</span></button>
+        <button type="button"><kbd>Esc</kbd><span class="btn-text"></span></button>
         <span class="progress"><i></i></span>
       </div>`;
     ui = {
@@ -229,7 +237,7 @@
       bar: root.querySelector('.progress'),
       fill: root.querySelector('.progress i'),
     };
-    // Düğmeye basmak hedef alanın odağını çalmasın
+    // Pressing the button must not steal focus from the target field
     ui.btn.addEventListener('mousedown', (e) => e.preventDefault());
     ui.btn.addEventListener('click', () => {
       stop();
@@ -250,10 +258,10 @@
     ui.label.textContent = text;
     const hasProgress = typeof o.progress === 'number';
     ui.bar.style.display = hasProgress ? '' : 'none';
-    ui.pct.textContent = hasProgress && (o.tone || 'typing') === 'typing' ? `%${Math.round(o.progress * 100)}` : '';
+    ui.pct.textContent = hasProgress && (o.tone || 'typing') === 'typing' ? L('percentValue', Math.round(o.progress * 100)) : '';
     if (hasProgress) ui.fill.style.width = `${Math.round(o.progress * 1000) / 10}%`;
     ui.btn.style.display = o.stop ? '' : 'none';
-    ui.btnText.textContent = o.stopLabel || 'Durdur';
+    ui.btnText.textContent = o.stopLabel || L('btnStop');
     if (o.hideAfter) hideTimer = setTimeout(hideOverlay, o.hideAfter);
   }
 
@@ -266,7 +274,7 @@
 
   const toast = (text) => showStatus(text, { tone: 'error', hideAfter: 3200 });
 
-  // ------------------------------------------------------------ yazma işlemi
+  // ------------------------------------------------------------------ typing
 
   function fire(el, type, key) {
     el.dispatchEvent(new KeyboardEvent(type, { key, bubbles: true, cancelable: true, composed: true }));
@@ -327,7 +335,7 @@
       insert(ch) {
         ensureFocus(el);
         const nl = ch === '\n';
-        if (nl && single) ch = ' '; // tek satırlı alanda Enter formu göndermesin
+        if (nl && single) ch = ' '; // Enter in a single-line field would submit the form
         const key = nl && multiline ? 'Enter' : ch;
         fire(el, 'keydown', key);
         let ok;
@@ -344,7 +352,7 @@
       },
       onProgress(i, n) {
         if (i % 5 === 0 || i === n) {
-          showStatus('Yazıyor', { progress: i / Math.max(n, 1), stop: true });
+          showStatus(L('statusTyping'), { progress: i / Math.max(n, 1), stop: true });
         }
       },
     };
@@ -353,11 +361,11 @@
   async function run(el, text, settings, opts) {
     if (state.running) return;
     if (!text || !text.trim()) {
-      toast('Pano boş. Önce yazdırmak istediğin metni kopyala.');
+      toast(L('clipEmpty'));
       return;
     }
     if (isPassword(el)) {
-      toast('Güvenlik için şifre alanlarına yazmıyorum.');
+      toast(L('toastPassword'));
       return;
     }
 
@@ -368,19 +376,23 @@
       if (opts && opts.caretEnd) placeCaretEnd(el);
 
       for (let s = Math.max(0, Math.round(settings.startDelay)); s > 0; s--) {
-        showStatus(`${s} saniye sonra yazmaya başlıyor`, { tone: 'info', stop: true, stopLabel: 'İptal' });
+        showStatus(L('statusCountdown', s), { tone: 'info', stop: true, stopLabel: L('btnCancel') });
         await sleep(1000);
       }
 
-      showStatus('Yazıyor', { progress: 0, stop: true });
-      const stats = await Engine.humanType(text, makeIO(el), { wpm: settings.wpm, typoRate: settings.typoRate });
-      const fixes = stats.typos ? `, ${stats.typos} düzeltme` : '';
-      showStatus(`Bitti: ${stats.chars} karakter${fixes}`, { tone: 'done', progress: 1, hideAfter: 2600 });
+      showStatus(L('statusTyping'), { progress: 0, stop: true });
+      const stats = await Engine.humanType(text, makeIO(el), {
+        wpm: settings.wpm,
+        typoRate: settings.typoRate,
+        layout: settings.layout,
+      });
+      const done = stats.typos ? L('statusDoneFixes', stats.chars, stats.typos) : L('statusDone', stats.chars);
+      showStatus(done, { tone: 'done', progress: 1, hideAfter: 2600 });
     } catch (e) {
-      if (e && e.message === 'aborted') showStatus('Yazma durduruldu', { tone: 'info', hideAfter: 1600 });
+      if (e && e.message === 'aborted') showStatus(L('statusStopped'), { tone: 'info', hideAfter: 1600 });
       else {
         console.error('[Autowriter]', e);
-        showStatus('Yazılamadı: ' + (e && e.message ? e.message : e), { tone: 'error', hideAfter: 4000 });
+        showStatus(L('statusFailed', e && e.message ? e.message : e), { tone: 'error', hideAfter: 4000 });
       }
     } finally {
       state.running = false;
@@ -389,7 +401,7 @@
     }
   }
 
-  // ------------------------------------------------------------- alan seçme
+  // -------------------------------------------------------------- field picker
 
   const pick = { active: false, box: null, listeners: [], text: null, settings: null };
 
@@ -417,7 +429,7 @@
       'border:2px solid #3355ff;background:rgba(51,85,255,.08);border-radius:6px;' +
       'box-shadow:0 0 0 4px rgba(51,85,255,.15);transition:all .08s ease-out;';
     const tag = document.createElement('div');
-    tag.textContent = 'Buraya yaz';
+    tag.textContent = L('pickTag');
     tag.style.cssText =
       'all:initial;position:absolute;right:-2px;top:-2px;padding:2px 8px 3px 10px;border-radius:0 6px 0 8px;' +
       'background:#3355ff;color:#fff;font:600 11.5px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;white-space:nowrap;';
@@ -425,7 +437,7 @@
     document.documentElement.appendChild(box);
     pick.box = box;
 
-    if (window === window.top) showStatus('Yazılacak alana tıkla', { tone: 'info', stop: true, stopLabel: 'İptal' });
+    if (window === window.top) showStatus(L('pickPrompt'), { tone: 'info', stop: true, stopLabel: L('btnCancel') });
 
     const inOverlay = (e) => {
       const t = e.target;
@@ -456,7 +468,9 @@
       swallow(e);
       const t = closestEditable(e.composedPath()[0]);
       if (!t) {
-        if (window === window.top) showStatus('Burası bir yazı alanı değil. Bir metin kutusuna tıkla', { tone: 'error', stop: true, stopLabel: 'İptal' });
+        if (window === window.top) {
+          showStatus(L('pickNotField'), { tone: 'error', stop: true, stopLabel: L('btnCancel') });
+        }
         return;
       }
       const txt = pick.text;
@@ -465,7 +479,7 @@
       try {
         chrome.runtime.sendMessage({ type: 'pick-done' });
       } catch (err) {
-        /* yoksay */
+        /* ignore */
       }
       run(t, txt, s, { caretEnd: true });
     };
@@ -481,7 +495,7 @@
     pick.listeners.forEach(([type, fn, capture]) => window.addEventListener(type, fn, capture));
   }
 
-  // Esc: çalışan yazmayı durdur / seçim modunu iptal et
+  // Esc: stop typing / cancel pick mode
   window.addEventListener(
     'keydown',
     (e) => {
@@ -497,7 +511,7 @@
         try {
           chrome.runtime.sendMessage({ type: 'pick-done' });
         } catch (err) {
-          /* yoksay */
+          /* ignore */
         }
       }
     },
@@ -512,7 +526,7 @@
     true
   );
 
-  // ------------------------------------------------------- kısayol / sağ tık
+  // ------------------------------------------------- shortcut / context menu
 
   async function onFocusedStart() {
     if (state.running) {
@@ -521,10 +535,10 @@
     }
     if (!document.hasFocus()) return;
     const a = deepActive();
-    if (!a || a.tagName === 'IFRAME' || a.tagName === 'FRAME') return; // alt frame ilgilenir
+    if (!a || a.tagName === 'IFRAME' || a.tagName === 'FRAME') return; // the child frame handles it
     const el = closestEditable(a);
     if (!el) {
-      if (window === window.top) toast('Önce yazılacak alana tıkla, sonra kısayola bas.');
+      if (window === window.top) toast(L('toastFocusFirst'));
       return;
     }
     const settings = await getSettings();
@@ -539,7 +553,7 @@
     }
     const el = lastContextTarget && closestEditable(lastContextTarget);
     if (!el) {
-      toast('Yazılabilir bir alan bulunamadı.');
+      toast(L('toastNoField'));
       return;
     }
     el.focus({ preventScroll: true });

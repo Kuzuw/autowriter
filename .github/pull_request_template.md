@@ -1,9 +1,9 @@
-## Ne değişti?
+## What changed?
 
-<!-- Kısaca anlat. İlgili issue varsa: Closes #123 -->
+<!-- A short summary. Link the issue if there is one: Closes #123 -->
 
-## Nasıl denedim?
+## How I tested it
 
-- [ ] `npm test` geçiyor
-- [ ] Eklentiyi Chrome'a yükleyip elle denedim (hangi sitelerde?)
-- [ ] `CHANGELOG.md` güncellendi
+- [ ] `npm test` passes
+- [ ] Loaded the extension in Chrome and tried it by hand (which sites?)
+- [ ] Updated `CHANGELOG.md`
