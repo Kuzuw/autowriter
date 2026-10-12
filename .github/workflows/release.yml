@@ -1,6 +1,6 @@
 name: Release
 
-# When a GitHub release is published (tag e.g. v1.2.0), build the extension
+# When a GitHub release is published (tag e.g. v1.0.0), build the extension
 # zip and attach it to that release.
 on:
   release:

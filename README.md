@@ -161,7 +161,7 @@ autowriter/
 
 UI strings live in [`scripts/locales.py`](scripts/locales.py). Edit them there and run `python3 scripts/locales.py` to regenerate `_locales/`.
 
-Publishing a GitHub release tagged `v` + the manifest version (for example `v1.2.0`) builds the zip and attaches it to the release. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [CHANGELOG](CHANGELOG.md).
+Publishing a GitHub release tagged `v` + the manifest version (for example `v1.0.0`) builds the zip and attaches it to the release. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [CHANGELOG](CHANGELOG.md).
 
 ### Known limits
 

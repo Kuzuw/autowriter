@@ -1,6 +1,6 @@
 {
   "name": "autowriter",
-  "version": "1.2.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Chrome extension that types your copied text into any field like a real person.",
   "author": "Kuzuw",

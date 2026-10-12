@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "default_locale": "en",
-  "version": "1.2.0",
+  "version": "1.0.0",
   "author": "Kuzuw",
   "homepage_url": "https://github.com/Kuzuw/autowriter",
   "description": "__MSG_extDescription__",

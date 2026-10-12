@@ -40,7 +40,7 @@ body:
     id: version
     attributes:
       label: Autowriter version
-      placeholder: Shown at the top of the popup, e.g. v1.2.0
+      placeholder: Shown at the top of the popup, e.g. v1.0.0
   - type: textarea
     id: extra
     attributes:
