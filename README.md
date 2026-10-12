@@ -179,6 +179,8 @@ Autowriter is meant for demos, screen recordings, presentations, testing, and ty
 <details>
 <summary>Türkçe açıklama</summary>
 
+<p align="center"><img src="docs/popup-tr.png" width="300" alt="Türkçe arayüz"></p>
+
 **Autowriter**, kopyaladığın metni seçtiğin alana insan gibi yazan bir Chrome eklentisidir. Değişken hızla yazar, noktalamada duraksar; arada yanlış tuşa basar, fark eder ve düzeltir.
 
 - **Başlatma:** Popup'tan **Alan seç ve yaz**, `Alt+Shift+W` kısayolu ya da yazı alanında sağ tık → **Autowriter: metni buraya yaz**. `Esc` ile durur.
